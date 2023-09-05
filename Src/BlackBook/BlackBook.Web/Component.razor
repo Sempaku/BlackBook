@@ -1,0 +1,33 @@
+﻿@page "/mega-connect"
+
+<h3>Mega Connection</h3>
+
+<div>
+    <label for="login">Login:</label>
+    <input type="text" id="login" @bind="login" />
+</div>
+
+<div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" @bind="password" />
+</div>
+
+<button @onclick="ConnectToMega">Connect to Mega</button>
+
+<div>
+    <label>Mega Info:</label>
+    <p>@megaInfo</p>
+</div>
+
+@code {
+    private string login = "";
+    private string password = "";
+    private string megaInfo = "";
+
+    private void ConnectToMega()
+    {
+        // Ваш код для подключения к Mega и получения информации
+        // Обновите переменную megaInfo с полученными данными
+        megaInfo = $"Connected to Mega with Login: {login}";
+    }
+}

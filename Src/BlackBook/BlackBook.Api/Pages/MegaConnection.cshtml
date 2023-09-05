@@ -1,0 +1,19 @@
+﻿@page 
+@model BlackBook.Api.Pages.MegaConnectionModel
+@{
+}
+
+<h1>Connection on <b>MEGA</b></h1>
+
+<form method="post">
+    <p>
+        <label>Email:</label> <br />
+        <input type="email" name="megaEmail"/>
+    </p>
+    <p>
+        <label>Password:</label> <br />
+        <input type="password" name="megaPassword" />
+    </p>
+    <input type="submit" name="sub"/>
+</form>
+<p>@Model.ConnectionResult</p>

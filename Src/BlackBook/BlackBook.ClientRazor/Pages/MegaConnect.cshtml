@@ -1,0 +1,19 @@
+﻿@page
+@model BlackBook.ClientRazor.Pages.MegaConnectModel
+
+<h2>Подключение к Mega</h2>
+
+
+<form method="post">
+    <p>
+        <label>Email:</label> <br />
+        <input type="email" name="megaEmail" />
+    </p>
+    <p>
+        <label>Password:</label> <br />
+        <input type="password" name="megaPassword" />
+    </p>
+    <input type="submit" name="megaSubmitButton" />
+</form>
+
+<p>@Model.ConnectionResult</p>

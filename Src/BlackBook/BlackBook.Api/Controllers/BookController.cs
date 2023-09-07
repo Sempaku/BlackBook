@@ -32,14 +32,14 @@ namespace BlackBook.Api.Controllers
         }
 
         [HttpPost("LoginToMega")]        
-        public async Task<IActionResult> LoginToMega(string email, string password)
+        public async Task<IActionResult> LoginToMega(LoginModel loginModel)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
             {
                 return BadRequest("Please, enter email/password.");
             }
 
-            var connectionState = await _megaService.LoginToMegaAsync(email, password);
+            var connectionState = await _megaService.LoginToMegaAsync(loginModel.Email, loginModel.Password);
             if (connectionState)
             {
                 ApplicationData.IsConnectedToMega = connectionState;

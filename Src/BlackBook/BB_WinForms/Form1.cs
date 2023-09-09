@@ -19,5 +19,14 @@ namespace BB_WinForms
             var res = MegaAuth.GetResult();
             MessageBox.Show(res.ToString());
         }
+
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            var books = await BlackBookHttpClient.GetAllBooksAsync();
+            // Чтобы обновить элементы управления из основного потока
+            listBox_BooksOnMain.Invoke((MethodInvoker)delegate {
+                listBox_BooksOnMain.Items.AddRange(books.Select(b => b.Title).ToArray());
+            });
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace BlackBook.Api.Controllers
         {
             _bookStorageService = bookStorageService;
             _megaService = megaService;
-        }
+      }
 
         [HttpGet("GetAllBooks")]
         [ProducesResponseType(typeof(List<Book>), 200)]

@@ -65,5 +65,20 @@ namespace Mega.Client
         {
             return await _client.GetDownloadLinkAsync(node);
         }
+
+        public async Task<INode> GetNodeFromLinkAsync(Uri fileLink)
+        {
+            return await _client.GetNodeFromLinkAsync(fileLink);
+        }
+
+        public async Task DownloadFileAsync(Uri fileLink, string name)
+        {
+            await _client.DownloadFileAsync(fileLink, name);
+        }
+
+        public async Task<Stream> DownloadAsync(INode node)
+        {
+            return await _client.DownloadAsync(node);
+        }
     }
 }

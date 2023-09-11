@@ -23,7 +23,7 @@ namespace BookStorageService
             BookFile bookFile = new BookFile
             {
                 BookId = book.Id,
-                FileName = file.Name,
+                FileName = file.FileName,
                 Format = Path.GetExtension(file.FileName),
                 FilePath = remoteFilePath.AbsoluteUri
             };

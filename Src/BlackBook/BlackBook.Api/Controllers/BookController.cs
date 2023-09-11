@@ -31,6 +31,14 @@ namespace BlackBook.Api.Controllers
             return Ok(books);
         }
 
+        [HttpPost("DownloadBookByDownloadUrl")]
+        [ProducesResponseType(typeof(Stream), 200)]
+        public async Task<IActionResult> GetBookByDownloadUrl([FromBody] Uri url)
+        {
+            Stream book = await _megaService.GetBookByDownloadUrl(url.AbsoluteUri);
+            return Ok(book);
+        }
+
         [HttpPost("LoginToMega")]        
         public async Task<IActionResult> LoginToMega(LoginModel loginModel)
         {

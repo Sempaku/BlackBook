@@ -9,5 +9,8 @@ namespace Mega.Client
 
         Task<bool> CreateClientAsync(string email, string password);
         Task<Uri> GetDownloadLinkAsync(INode node);
+        Task<INode> GetNodeFromLinkAsync(Uri fileLink);
+        Task DownloadFileAsync(Uri fileLink, string name);
+        Task<Stream> DownloadAsync(INode node);
     }
 }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -45,6 +46,44 @@ namespace BB_WinForms
             }
         }
 
+        public static async Task<bool> DownloadBook(BookModel book)
+        {
+            string fileUrl = book.BookFile.FilePath;
+            Uri uri = new Uri(fileUrl);
+
+            try
+            {
+                HttpResponseMessage response = await SendPostRequestAsync(ApplicationData.DOWNLOAD_BOOK_BY_DOWNLOAD_URL, uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Читаем поток данных (книгу) из ответа.
+                    Stream bookStream = await response.Content.ReadAsStreamAsync();
+
+                    string localFilePath = $@"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}";
+                    using (FileStream fileStream = File.Create(localFilePath))
+                    {
+                        bookStream.CopyTo(fileStream);
+                    }
+
+                    // Закрываем поток данных (книгу).
+                    bookStream.Close();
+                    return true;
+                }
+                else
+                {
+                    // Обработка ошибки, если запрос не был успешным.
+                    MessageBox.Show($"Ошибка: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
         private static async Task<HttpResponseMessage> SendPostRequestAsync(string endpoint, object data)
         {
             try
@@ -52,16 +91,16 @@ namespace BB_WinForms
                 string json = JsonConvert.SerializeObject(data);
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage responce = await _httpClient.PostAsync(endpoint, stringContent);
+                HttpResponseMessage response = await _httpClient.PostAsync(endpoint, stringContent);
 
-                if (responce.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
-                    return responce;
+                    return response;
                 }
                 else
                 {
-                    MessageBox.Show($"Invalid operation: {responce.StatusCode} - {responce.Content.ReadAsStringAsync()}");
-                    return responce;
+                    MessageBox.Show($"Invalid operation: {response.StatusCode} - {response.Content.ReadAsStringAsync()}");
+                    return response;
                 }
             }
             catch (Exception ex)

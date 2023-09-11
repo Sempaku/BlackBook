@@ -106,13 +106,11 @@
             // 
             this.listBox_BooksOnMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox_BooksOnMain.FormattingEnabled = true;
-            this.listBox_BooksOnMain.Items.AddRange(new object[] {
-            "Book1",
-            "Book2"});
             this.listBox_BooksOnMain.Location = new System.Drawing.Point(0, 0);
             this.listBox_BooksOnMain.Name = "listBox_BooksOnMain";
             this.listBox_BooksOnMain.Size = new System.Drawing.Size(196, 495);
             this.listBox_BooksOnMain.TabIndex = 0;
+            this.listBox_BooksOnMain.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox_BooksOnMain_MouseDoubleClick);
             // 
             // pdf_Reader
             // 

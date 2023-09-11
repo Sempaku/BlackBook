@@ -18,6 +18,15 @@ namespace MegaService
             _megaClient = megaClient;
         }
 
+        public async Task<Stream> GetBookByDownloadUrl(string url)
+        {
+            Uri fileLink = new Uri(url);
+            INode node = await _megaClient.GetNodeFromLinkAsync(fileLink);
+
+            var stream = await _megaClient.DownloadAsync(node);
+            return stream;
+        }
+
         public async Task<bool> LoginToMegaAsync(string email, string password)
         {
             bool connectionResult = await _megaClient.CreateClientAsync(email, password);

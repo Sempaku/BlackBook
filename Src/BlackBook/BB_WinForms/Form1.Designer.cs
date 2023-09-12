@@ -37,6 +37,7 @@
             this.listBox_BooksOnMain = new System.Windows.Forms.ListBox();
             this.pdf_Reader = new AxAcroPDFLib.AxAcroPDF();
             this.tabPage_BookLibrary = new System.Windows.Forms.TabPage();
+            this.syncToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage_Main.SuspendLayout();
@@ -59,6 +60,8 @@
             // 
             // menuToolStripMenuItem
             // 
+            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.syncToolStripMenuItem});
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.menuToolStripMenuItem.Text = "Menu";
@@ -132,6 +135,13 @@
             this.tabPage_BookLibrary.Text = "Library";
             this.tabPage_BookLibrary.UseVisualStyleBackColor = true;
             // 
+            // syncToolStripMenuItem
+            // 
+            this.syncToolStripMenuItem.Name = "syncToolStripMenuItem";
+            this.syncToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.syncToolStripMenuItem.Text = "Sync";
+            this.syncToolStripMenuItem.Click += new System.EventHandler(this.syncToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -167,6 +177,7 @@
         private AxAcroPDFLib.AxAcroPDF pdf_Reader;
         private System.Windows.Forms.TabPage tabPage_BookLibrary;
         private System.Windows.Forms.ListBox listBox_BooksOnMain;
+        private System.Windows.Forms.ToolStripMenuItem syncToolStripMenuItem;
     }
 }
 

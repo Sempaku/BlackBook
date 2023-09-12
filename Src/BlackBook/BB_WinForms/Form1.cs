@@ -72,5 +72,15 @@ namespace BB_WinForms
         {
             pdf_Reader.src = pathToBook;
         }
+
+        private async void syncToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBox_BooksOnMain.Items.Clear();
+            _books = await BlackBookHttpClient.GetAllBooksAsync();
+            // Чтобы обновить элементы управления из основного потока
+            listBox_BooksOnMain.Invoke((MethodInvoker)delegate {
+                listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
+            });
+        }
     }
 }

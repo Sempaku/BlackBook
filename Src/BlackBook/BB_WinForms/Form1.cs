@@ -1,14 +1,11 @@
-﻿using BB_WinForms.Forms;
+﻿using BB_WinForms.DbUtils;
+using BB_WinForms.Forms;
 using BB_WinForms.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BB_WinForms
@@ -21,6 +18,7 @@ namespace BB_WinForms
             InitializeComponent();
             var res = MegaAuth.GetResult();
             MessageBox.Show(res.ToString());
+            UpdateDataGridView();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -81,6 +79,39 @@ namespace BB_WinForms
             listBox_BooksOnMain.Invoke((MethodInvoker)delegate {
                 listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
             });
+
+            UpdateDataGridView();
+        }
+
+        private void UpdateDataGridView()
+        {
+            var sql = "SELECT * FROM public.\"Books\"";
+            var connectionString = "Host=127.0.0.1;Port=5432;Database=bb_test_db;Username=postgres;Password=2003;";
+            dataGridView1.DataSource = NpgsqlHelper.ExecuteNpgsqlTextCommand(sql, connectionString);
+        }
+
+        private void addBookToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = ".PDF | *.pdf";
+
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(openFileDialog1.FileName))
+            {
+                try
+                {
+                    var addResult = AddBookForm.GetResult(openFileDialog1.FileName);
+                    if (addResult)
+                        MessageBox.Show("Succes!");
+                    else
+                        MessageBox.Show("Fail!");
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
         }
     }
 }

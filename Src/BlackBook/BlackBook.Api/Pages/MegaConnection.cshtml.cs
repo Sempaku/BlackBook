@@ -1,4 +1,3 @@
-using Mega.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,7 +6,7 @@ namespace BlackBook.Api.Pages
     public class MegaConnectionModel : PageModel
     {
         private static string _connectionResult;
-        public string ConnectionResult => _connectionResult ;
+        public string ConnectionResult => _connectionResult;
 
         public void OnGet()
         {

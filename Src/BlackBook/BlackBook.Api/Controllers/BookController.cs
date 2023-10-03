@@ -1,12 +1,8 @@
 ﻿using BlackBook.Api.Model;
 using BlackBook.Data.Model;
 using BookStorageService;
-using CG.Web.MegaApiClient;
-using Mega.Client;
 using MegaService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace BlackBook.Api.Controllers
 {
@@ -21,7 +17,7 @@ namespace BlackBook.Api.Controllers
         {
             _bookStorageService = bookStorageService;
             _megaService = megaService;
-      }
+        }
 
         [HttpGet("GetAllBooks")]
         [ProducesResponseType(typeof(List<Book>), 200)]
@@ -39,7 +35,7 @@ namespace BlackBook.Api.Controllers
             return Ok(book);
         }
 
-        [HttpPost("LoginToMega")]        
+        [HttpPost("LoginToMega")]
         public async Task<IActionResult> LoginToMega(LoginModel loginModel)
         {
             if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
@@ -83,7 +79,7 @@ namespace BlackBook.Api.Controllers
                     Pages = model.Pages
                 };
 
-                var uri = await _megaService.UploadStreamToMegaAsync(stream, Guid.NewGuid() + model.File.FileName); 
+                var uri = await _megaService.UploadStreamToMegaAsync(stream, Guid.NewGuid() + model.File.FileName);
 
                 if (uri == null)
                 {
@@ -95,8 +91,5 @@ namespace BlackBook.Api.Controllers
                 return Ok("Book added successfully.");
             }
         }
-
-       
-        
     }
 }

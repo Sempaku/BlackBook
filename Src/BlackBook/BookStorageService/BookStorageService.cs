@@ -32,13 +32,12 @@ namespace BookStorageService
             book.UserBookProgress = new UserBookProgress { BookId = book.Id, LastReadPage = 0 };
 
             await _bookRepository.AddBookAsync(book);
-
         }
 
         public async Task<List<Book>> GetAllBooksAsync()
         {
             List<Book> books = await _bookRepository.GetAllBooksAsync();
             return books;
-        }      
+        }
     }
 }

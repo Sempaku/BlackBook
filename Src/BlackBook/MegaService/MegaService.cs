@@ -1,11 +1,6 @@
 ﻿using CG.Web.MegaApiClient;
 using Mega.Client;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MegaService
 {
@@ -30,9 +25,9 @@ namespace MegaService
         public async Task<bool> LoginToMegaAsync(string email, string password)
         {
             bool connectionResult = await _megaClient.CreateClientAsync(email, password);
-            if (connectionResult)            
+            if (connectionResult)
                 return true;
-            
+
             return false;
         }
 
@@ -59,7 +54,7 @@ namespace MegaService
                 throw new Exception("_megaClient is null");
 
             INode uploadedFile = await _megaClient.UploadStreamAsync(stream, name);
-            
+
             if (uploadedFile != null)
                 return await _megaClient.GetDownloadLinkAsync(uploadedFile);
 

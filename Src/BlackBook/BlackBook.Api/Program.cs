@@ -6,8 +6,6 @@ using Mega.Client;
 using MegaService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace BlackBook.Api
 {
@@ -19,12 +17,10 @@ namespace BlackBook.Api
 
             // Add services to the container.
 
-            builder.Services.AddRazorPages( options =>
+            builder.Services.AddRazorPages(options =>
             {
                 options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
             });
-
-            
 
             builder.Services.AddControllers();
 
@@ -38,7 +34,7 @@ namespace BlackBook.Api
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddSingleton<IMegaClient,  MegaClient>();
+            builder.Services.AddSingleton<IMegaClient, MegaClient>();
             builder.Services.AddSingleton<IMegaService, MegaService.MegaService>();
             builder.Services.AddScoped<IBookRepository, BookRepository>();
             builder.Services.AddScoped<IBookFileRepository, BookFileRepository>();
@@ -60,7 +56,6 @@ namespace BlackBook.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
             app.MapRazorPages();

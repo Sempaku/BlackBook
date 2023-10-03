@@ -8,6 +8,7 @@ namespace Mega.Client
         private const string SYS_DIRECTORY_NAME = ".blackbook$sys";
         private MegaApiClient? _client;
         private INode? _sysDirectory;
+
         public async Task<bool> CreateClientAsync(string email, string password)
         {
             if (_client == null)
@@ -21,25 +22,24 @@ namespace Mega.Client
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);           
+                Debug.WriteLine(ex.Message);
             }
-            
-            return _client.IsLoggedIn;            
+
+            return _client.IsLoggedIn;
         }
 
         public async Task<INode> UploadFileAsync(string filename)
         {
             if (string.IsNullOrWhiteSpace(filename))
-                return null;                
+                return null;
 
             if (_sysDirectory == null)
             {
-
             }
 
             INode uploadedFile = await _client.UploadFileAsync(filename, _sysDirectory);
             return uploadedFile;
-        }        
+        }
 
         public async Task<INode> UploadStreamAsync(Stream stream, string name)
         {
@@ -58,7 +58,7 @@ namespace Mega.Client
         private async Task<INode?> GetBookDirectoryAsync()
         {
             var nodes = await _client.GetNodesAsync();
-            return nodes.SingleOrDefault(node => node.Name == SYS_DIRECTORY_NAME);            
+            return nodes.SingleOrDefault(node => node.Name == SYS_DIRECTORY_NAME);
         }
 
         public async Task<Uri> GetDownloadLinkAsync(INode node)

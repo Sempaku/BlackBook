@@ -1,5 +1,4 @@
-﻿
-namespace BB_WinForms.Models
+﻿namespace BB_WinForms.Models
 {
     public class BookFileModel
     {
@@ -19,6 +18,6 @@ namespace BB_WinForms.Models
         public string FileName { get; set; }
 
         // Навигационное свойство для связи с книгой
-        public BookModel Book { get; set; }        
+        public BookModel Book { get; set; }
     }
 }

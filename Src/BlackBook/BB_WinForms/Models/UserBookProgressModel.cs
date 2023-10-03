@@ -11,6 +11,6 @@
         public int LastReadPage { get; set; }
 
         // Навигационное свойство для связи с книгой
-        public BookModel Book { get; set; }        
+        public BookModel Book { get; set; }
     }
 }

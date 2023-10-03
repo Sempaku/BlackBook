@@ -13,6 +13,7 @@ namespace BB_WinForms
     public partial class Form1 : Form
     {
         private List<BookModel> _books;
+
         public Form1()
         {
             InitializeComponent();
@@ -25,7 +26,8 @@ namespace BB_WinForms
         {
             _books = await BlackBookHttpClient.GetAllBooksAsync();
             // Чтобы обновить элементы управления из основного потока
-            listBox_BooksOnMain.Invoke((MethodInvoker)delegate {
+            listBox_BooksOnMain.Invoke((MethodInvoker)delegate
+            {
                 listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
             });
         }
@@ -50,7 +52,6 @@ namespace BB_WinForms
                     }
                 }
             }
-            
         }
 
         private bool BookContainInLocalDirectory(string bookName)
@@ -76,7 +77,8 @@ namespace BB_WinForms
             listBox_BooksOnMain.Items.Clear();
             _books = await BlackBookHttpClient.GetAllBooksAsync();
             // Чтобы обновить элементы управления из основного потока
-            listBox_BooksOnMain.Invoke((MethodInvoker)delegate {
+            listBox_BooksOnMain.Invoke((MethodInvoker)delegate
+            {
                 listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
             });
 
@@ -104,14 +106,12 @@ namespace BB_WinForms
                         MessageBox.Show("Succes!");
                     else
                         MessageBox.Show("Fail!");
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
             }
-
         }
     }
 }

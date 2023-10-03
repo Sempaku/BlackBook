@@ -18,6 +18,6 @@
         public BookFileModel BookFile { get; set; }
 
         // Навигационное свойство для связи с прогрессом чтения
-        public UserBookProgressModel UserBookProgress { get; set; }        
+        public UserBookProgressModel UserBookProgress { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BB_WinForms.Models;
 using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -165,7 +164,5 @@ namespace BB_WinForms
                 return null;
             }
         }
-
-        
     }
 }

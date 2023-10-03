@@ -1,14 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BB_WinForms.Forms
@@ -28,7 +19,7 @@ namespace BB_WinForms.Forms
             _filenamePath = filename;
             DialogResult dialogResult;
             bool result;
-            
+
             using (var form = new AddBookForm())
             {
                 dialogResult = form.ShowDialog();
@@ -73,10 +64,8 @@ namespace BB_WinForms.Forms
                 }, _filenamePath);
 
             if (result) Result = true;
-            
+
             Close();
         }
-
-        
     }
 }

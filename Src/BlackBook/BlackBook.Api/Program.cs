@@ -6,6 +6,7 @@ using Mega.Client;
 using MegaService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RatingService;
 
 namespace BlackBook.Api
 {
@@ -39,7 +40,9 @@ namespace BlackBook.Api
             builder.Services.AddScoped<IBookRepository, BookRepository>();
             builder.Services.AddScoped<IBookFileRepository, BookFileRepository>();
             builder.Services.AddScoped<IUserBookProgressRepository, UserBookProgressRepository>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             builder.Services.AddScoped<IBookStorageService, BookStorageService.BookStorageService>();
+            builder.Services.AddScoped<IRatingService, RatingService.RatingService>();
 
             var app = builder.Build();
 

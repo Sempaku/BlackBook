@@ -9,6 +9,7 @@ namespace BB_WinForms
         public const string GET_ALL_BOOKS_URL = REMOTE_HOST + "/api/Book/GetAllBooks";
         public const string DOWNLOAD_BOOK_BY_DOWNLOAD_URL = REMOTE_HOST + "/api/Book/DownloadBookByDownloadUrl";
         public const string ADD_BOOK = REMOTE_HOST + "/api/Book/AddBook";
+        public const string SET_BOOK_RATING = REMOTE_HOST + "/api/Book/SetBookRating";
 
         public static string LocalFileStorage { get; } = Directory.GetCurrentDirectory();
     }

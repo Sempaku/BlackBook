@@ -36,6 +36,8 @@
             this.textBox_author = new System.Windows.Forms.TextBox();
             this.textBox_pages = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.textBox_genre = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button_add
@@ -43,7 +45,7 @@
             this.button_add.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button_add.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button_add.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.button_add.Location = new System.Drawing.Point(498, 159);
+            this.button_add.Location = new System.Drawing.Point(498, 233);
             this.button_add.Name = "button_add";
             this.button_add.Size = new System.Drawing.Size(127, 38);
             this.button_add.TabIndex = 0;
@@ -83,7 +85,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(6, 110);
+            this.label3.Location = new System.Drawing.Point(6, 159);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(123, 40);
             this.label3.TabIndex = 4;
@@ -100,7 +102,7 @@
             // textBox_pages
             // 
             this.textBox_pages.Font = new System.Drawing.Font("Arial", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox_pages.Location = new System.Drawing.Point(137, 110);
+            this.textBox_pages.Location = new System.Drawing.Point(137, 159);
             this.textBox_pages.Name = "textBox_pages";
             this.textBox_pages.Size = new System.Drawing.Size(488, 40);
             this.textBox_pages.TabIndex = 7;
@@ -109,12 +111,32 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // textBox_genre
+            // 
+            this.textBox_genre.Font = new System.Drawing.Font("Arial", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox_genre.Location = new System.Drawing.Point(137, 110);
+            this.textBox_genre.Name = "textBox_genre";
+            this.textBox_genre.Size = new System.Drawing.Size(488, 40);
+            this.textBox_genre.TabIndex = 9;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Arial", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.Location = new System.Drawing.Point(6, 110);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(121, 40);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Genre:";
+            // 
             // AddBookForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(634, 202);
+            this.ClientSize = new System.Drawing.Size(637, 298);
+            this.Controls.Add(this.textBox_genre);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.textBox_pages);
             this.Controls.Add(this.textBox_author);
             this.Controls.Add(this.label3);
@@ -139,5 +161,7 @@
         private System.Windows.Forms.TextBox textBox_author;
         private System.Windows.Forms.TextBox textBox_pages;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox textBox_genre;
+        private System.Windows.Forms.Label label4;
     }
 }

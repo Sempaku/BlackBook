@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BB_WinForms
@@ -24,6 +25,7 @@ namespace BB_WinForms
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+
             _books = await BlackBookHttpClient.GetAllBooksAsync();
             // Чтобы обновить элементы управления из основного потока
             listBox_BooksOnMain.Invoke((MethodInvoker)delegate
@@ -82,14 +84,38 @@ namespace BB_WinForms
                 listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
             });
 
-            UpdateDataGridView();
+            await UpdateDataGridView();
         }
 
-        private void UpdateDataGridView()
+        private async Task UpdateDataGridView()
         {
-            var sql = "SELECT * FROM public.\"Books\"";
+            /*var sql = "SELECT * FROM public.\"Books\"";
             var connectionString = "Host=127.0.0.1;Port=5432;Database=bb_test_db;Username=postgres;Password=2003;";
             dataGridView1.DataSource = NpgsqlHelper.ExecuteNpgsqlTextCommand(sql, connectionString);
+*/
+            var books = await BlackBookHttpClient.GetAllBooksAsync();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Title", typeof(string));
+            dt.Columns.Add("Author", typeof(string));
+            dt.Columns.Add("Genre", typeof(string)); 
+            dt.Columns.Add("Rating", typeof(int));
+            dt.Columns.Add("Pages", typeof(string));
+
+            // Добавьте данные из списка books в DataTable
+            foreach (var book in books)
+            {
+                DataRow row = dt.NewRow();
+                row["Id"] = book.Id;
+                row["Title"] = book.Title;
+                row["Author"] = book.Author;                
+                row["Genre"] = book.Genre;
+                row["Rating"] = book.Rating.BookRating;
+                row["Pages"] = book.Pages;
+                dt.Rows.Add(row);
+            }
+
+            dataGridView1.DataSource = dt;
         }
 
         private void addBookToolStripMenuItem_Click(object sender, EventArgs e)
@@ -111,6 +137,16 @@ namespace BB_WinForms
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+        }
+
+        private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.ColumnIndex == 4 && e.RowIndex >= 0)
+            {
+                var changedValue = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                var bookId = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                await BlackBookHttpClient.SetRatingByBook(bookId, changedValue);
             }
         }
     }

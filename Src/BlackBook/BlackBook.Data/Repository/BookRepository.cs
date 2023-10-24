@@ -18,12 +18,16 @@ namespace BlackBook.Data.Repository
             return await _context.Books
                 .Include(b => b.BookFile)
                 .Include(b => b.UserBookProgress)
+                .Include(b => b.Rating)
                 .ToListAsync();
         }
 
         public async Task<Book> GetBookByIdAsync(int id)
         {
-            return await _context.Books.FindAsync(id);
+            return await _context.Books
+                .Include(b => b.BookFile)
+                .Include(b => b.UserBookProgress)
+                .Include(b => b.Rating).FirstAsync(b => b.Id == id);
         }
 
         public async Task AddBookAsync(Book book)

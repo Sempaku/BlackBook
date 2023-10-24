@@ -7,15 +7,10 @@ namespace BookStorageService
     public class BookStorageService : IBookStorageService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly IBookFileRepository _bookFileRepository;
-        private readonly IUserBookProgressRepository _userBookProgressRepository;
 
-        public BookStorageService(IBookRepository bookRepository,
-            IBookFileRepository bookFileRepository, IUserBookProgressRepository userBookProgressRepository)
+        public BookStorageService(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
-            _bookFileRepository = bookFileRepository;
-            _userBookProgressRepository = userBookProgressRepository;
         }
 
         public async Task AddBookAsync(Book book, IFormFile file, Uri remoteFilePath)
@@ -30,7 +25,7 @@ namespace BookStorageService
 
             book.BookFile = bookFile;
             book.UserBookProgress = new UserBookProgress { BookId = book.Id, LastReadPage = 0 };
-
+            book.Rating = new Rating { BookId = book.Id , BookRating = 0};
             await _bookRepository.AddBookAsync(book);
         }
 

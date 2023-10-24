@@ -50,6 +50,11 @@ namespace BB_WinForms.Forms
                 MessageBox.Show("Bad input: Title OR Author"); Close();
             }
 
+            if (!ValidateString(textBox_genre.Text))
+            {
+                MessageBox.Show("Bad input: Genre"); Close();
+            }
+
             if (!File.Exists(_filenamePath))
             {
                 MessageBox.Show("Bad input: Directory not contains file."); Close();
@@ -60,6 +65,7 @@ namespace BB_WinForms.Forms
                 {
                     Title = textBox_title.Text,
                     Author = textBox_author.Text,
+                    Genre = textBox_genre.Text,
                     Pages = int.Parse(textBox_pages.Text),
                 }, _filenamePath);
 

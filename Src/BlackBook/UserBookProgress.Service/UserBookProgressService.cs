@@ -1,13 +1,14 @@
-﻿using BlackBook.Data.Model;
+﻿using BlackBook.Data.Interfaces;
+using BlackBook.Data.Model;
 using BlackBook.Data.Repository;
 
 namespace UserBookProgressService
 {
     public class UserBookProgressService : IUserBookProgressService
     {
-        private readonly UserBookProgressRepository _userBookProgressRepository;
+        private readonly IUserBookProgressRepository _userBookProgressRepository;
 
-        public UserBookProgressService(UserBookProgressRepository userBookProgressRepository)
+        public UserBookProgressService(IUserBookProgressRepository userBookProgressRepository)
         {
             _userBookProgressRepository = userBookProgressRepository;
         }

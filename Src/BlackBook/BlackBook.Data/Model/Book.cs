@@ -14,6 +14,10 @@ namespace BlackBook.Data.Model
         /// <summary> Автор книги </summary>
         [Required]
         public string Author { get; set; }
+        
+        /// <summary> Жанр книги </summary>
+        [Required]
+        public string Genre { get; set; }
 
         /// <summary> Количество страниц в книге </summary>
         [Required]
@@ -25,18 +29,22 @@ namespace BlackBook.Data.Model
         // Навигационное свойство для связи с прогрессом чтения
         public UserBookProgress UserBookProgress { get; set; }
 
+        // Навигационное свойство для связи с рейтингом книги
+        public Rating Rating { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is Book book &&
                    Id == book.Id &&
                    Title == book.Title &&
                    Author == book.Author &&
-                   Pages == book.Pages;
+                   Pages == book.Pages &&
+                   Rating == book.Rating;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Title, Author, Pages);
+            return HashCode.Combine(Id, Title, Author, Pages, Rating);
         }
     }
 }

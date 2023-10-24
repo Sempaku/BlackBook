@@ -134,15 +134,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ALL_TABLES.cs">
-      <DependentUpon>ALL_TABLES.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="ALL_TABLES.Designer.cs">
+    <Compile Include="BlackBookHttpClient.cs" />
+    <Compile Include="DataSet11.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ALL_TABLES.xsd</DependentUpon>
+      <DependentUpon>DataSet11.xsd</DependentUpon>
     </Compile>
-    <Compile Include="BlackBookHttpClient.cs" />
     <Compile Include="DbUtils\NpgsqlHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -166,6 +163,7 @@
     <Compile Include="Models\BookModel.cs" />
     <Compile Include="Models\BookFileModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\RatingModel.cs" />
     <Compile Include="Models\UserBookProgressModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,16 +186,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="ALL_TABLES.xsc">
-      <DependentUpon>ALL_TABLES.xsd</DependentUpon>
+    <None Include="DataSet11.xsc">
+      <DependentUpon>DataSet11.xsd</DependentUpon>
     </None>
-    <None Include="ALL_TABLES.xsd">
+    <None Include="DataSet11.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ALL_TABLES.Designer.cs</LastGenOutput>
+      <LastGenOutput>DataSet11.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="ALL_TABLES.xss">
-      <DependentUpon>ALL_TABLES.xsd</DependentUpon>
+    <None Include="DataSet11.xss">
+      <DependentUpon>DataSet11.xsd</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

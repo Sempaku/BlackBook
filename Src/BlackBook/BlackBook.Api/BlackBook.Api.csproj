@@ -19,6 +19,7 @@
     <ProjectReference Include="..\BookStorageService\BookStorageService.csproj" />
     <ProjectReference Include="..\Mega.Client\Mega.Client.csproj" />
     <ProjectReference Include="..\MegaService\MegaService.csproj" />
+    <ProjectReference Include="..\RatingService\RatingService.csproj" />
   </ItemGroup>
 
 </Project>

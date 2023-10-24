@@ -11,11 +11,17 @@
         /// <summary> Автор книги </summary>
         public string Author { get; set; }
 
+        /// <summary> Жанр книги </summary>
+        public string Genre { get; set; }
+
         /// <summary> Количество страниц в книге </summary>
         public int Pages { get; set; }
 
         // Навигационное свойство для связи с файлом книги
         public BookFileModel BookFile { get; set; }
+
+        // Навигационное свойство для связи с файлом книги
+        public RatingModel Rating { get; set; }
 
         // Навигационное свойство для связи с прогрессом чтения
         public UserBookProgressModel UserBookProgress { get; set; }

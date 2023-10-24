@@ -1,8 +1,11 @@
 ﻿using BlackBook.Api.Model;
+using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
 using BookStorageService;
 using MegaService;
 using Microsoft.AspNetCore.Mvc;
+using RatingService;
+using System.Text.Json;
 
 namespace BlackBook.Api.Controllers
 {
@@ -11,12 +14,14 @@ namespace BlackBook.Api.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookStorageService _bookStorageService;
+        private readonly IRatingService _ratingService;
         private readonly IMegaService _megaService;
 
-        public BookController(IBookStorageService bookStorageService, IMegaService megaService)
+        public BookController(IBookStorageService bookStorageService, IMegaService megaService, IRatingService ratingService)
         {
             _bookStorageService = bookStorageService;
             _megaService = megaService;
+            _ratingService = ratingService;
         }
 
         [HttpGet("GetAllBooks")]
@@ -76,6 +81,7 @@ namespace BlackBook.Api.Controllers
                 {
                     Title = model.Title,
                     Author = model.Author,
+                    Genre = model.Genre,
                     Pages = model.Pages
                 };
 
@@ -90,6 +96,22 @@ namespace BlackBook.Api.Controllers
 
                 return Ok("Book added successfully.");
             }
+        }
+
+        [HttpPost("SetBookRating")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> SetBookRating(JsonElement ratingRequest)
+        {
+            if (ratingRequest.TryGetProperty("bookId", out var bookIdElement) && ratingRequest.TryGetProperty("rating", out var ratingElement))
+            {
+                if (int.TryParse(bookIdElement.ToString(), out int bookId) 
+                    && int.TryParse(ratingElement.ToString(),out int rating))
+                {
+                    return Ok(await _ratingService.ModifyRatingByBookIdAsync(bookId, rating));
+                }
+            }
+
+            return BadRequest(false);
         }
     }
 }

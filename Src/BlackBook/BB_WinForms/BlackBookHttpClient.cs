@@ -97,6 +97,7 @@ namespace BB_WinForms
                     // Добавьте свойства BookAddRequestModel как текстовые поля
                     form.Add(new StringContent(book.Title), "Title");
                     form.Add(new StringContent(book.Author), "Author");
+                    form.Add(new StringContent(book.Genre), "Genre");
                     form.Add(new StringContent(book.Pages.ToString()), "Pages");
 
                     // Откройте поток файла и добавьте его в содержимое запроса
@@ -162,6 +163,36 @@ namespace BB_WinForms
             {
                 MessageBox.Show($"Error: {ex.Message}");
                 return null;
+            }
+        }
+
+        internal static async Task<bool> SetRatingByBook(string bookId, string changedValue)
+        {
+            var obj = new
+            {
+                bookId = bookId, rating = changedValue,
+            };
+
+            try
+            {
+                HttpResponseMessage response = await SendPostRequestAsync(ApplicationData.SET_BOOK_RATING, obj);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Рейтинг изменен!");
+                    return true;
+                }
+                else
+                {
+                    // Обработка ошибки, если запрос не был успешным.
+                    MessageBox.Show($"Не удалось изменить рейтинг: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
             }
         }
     }

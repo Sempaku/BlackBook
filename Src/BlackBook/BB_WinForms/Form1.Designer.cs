@@ -33,23 +33,26 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.syncToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_Main = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listBox_BooksOnMain = new System.Windows.Forms.ListBox();
             this.pdf_Reader = new AxAcroPDFLib.AxAcroPDF();
             this.tabPage_BookLibrary = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.dataSet1 = new BB_WinForms.DataSet1();
+            this.booksBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.booksTableAdapter = new BB_WinForms.DataSet1TableAdapters.BooksTableAdapter();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.titleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.genreDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rating = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pagesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.booksBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.aLLTABLESBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.aLL_TABLES = new BB_WinForms.ALL_TABLES();
-            this.bookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage_Main.SuspendLayout();
@@ -59,10 +62,10 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pdf_Reader)).BeginInit();
             this.tabPage_BookLibrary.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.booksBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aLLTABLESBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aLL_TABLES)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -90,6 +93,21 @@
             this.syncToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
             this.syncToolStripMenuItem.Text = "Sync";
             this.syncToolStripMenuItem.Click += new System.EventHandler(this.syncToolStripMenuItem_Click);
+            // 
+            // bookToolStripMenuItem
+            // 
+            this.bookToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addBookToolStripMenuItem});
+            this.bookToolStripMenuItem.Name = "bookToolStripMenuItem";
+            this.bookToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.bookToolStripMenuItem.Text = "Book";
+            // 
+            // addBookToolStripMenuItem
+            // 
+            this.addBookToolStripMenuItem.Name = "addBookToolStripMenuItem";
+            this.addBookToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.addBookToolStripMenuItem.Text = "Add book";
+            this.addBookToolStripMenuItem.Click += new System.EventHandler(this.addBookToolStripMenuItem_Click);
             // 
             // tabControl
             // 
@@ -152,7 +170,7 @@
             // 
             // tabPage_BookLibrary
             // 
-            this.tabPage_BookLibrary.Controls.Add(this.dataGridView1);
+            this.tabPage_BookLibrary.Controls.Add(this.tableLayoutPanel1);
             this.tabPage_BookLibrary.Location = new System.Drawing.Point(4, 22);
             this.tabPage_BookLibrary.Name = "tabPage_BookLibrary";
             this.tabPage_BookLibrary.Padding = new System.Windows.Forms.Padding(3);
@@ -160,6 +178,20 @@
             this.tabPage_BookLibrary.TabIndex = 1;
             this.tabPage_BookLibrary.Text = "Library";
             this.tabPage_BookLibrary.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.92128F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.07872F));
+            this.tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1067, 471);
+            this.tableLayoutPanel1.TabIndex = 1;
             // 
             // dataGridView1
             // 
@@ -174,89 +206,74 @@
             this.idDataGridViewTextBoxColumn,
             this.titleDataGridViewTextBoxColumn,
             this.authorDataGridViewTextBoxColumn,
+            this.genreDataGridViewTextBoxColumn,
+            this.Rating,
             this.pagesDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.booksBindingSource;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1067, 471);
+            this.dataGridView1.Size = new System.Drawing.Size(548, 465);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.Frozen = true;
-            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
-            this.idDataGridViewTextBoxColumn.MinimumWidth = 2;
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Visible = false;
-            this.idDataGridViewTextBoxColumn.Width = 2;
-            // 
-            // titleDataGridViewTextBoxColumn
-            // 
-            this.titleDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.titleDataGridViewTextBoxColumn.DataPropertyName = "Title";
-            this.titleDataGridViewTextBoxColumn.Frozen = true;
-            this.titleDataGridViewTextBoxColumn.HeaderText = "Название книги";
-            this.titleDataGridViewTextBoxColumn.Name = "titleDataGridViewTextBoxColumn";
-            this.titleDataGridViewTextBoxColumn.ReadOnly = true;
-            this.titleDataGridViewTextBoxColumn.Width = 105;
-            // 
-            // authorDataGridViewTextBoxColumn
-            // 
-            this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
-            this.authorDataGridViewTextBoxColumn.Frozen = true;
-            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
-            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            this.authorDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // pagesDataGridViewTextBoxColumn
-            // 
-            this.pagesDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.pagesDataGridViewTextBoxColumn.DataPropertyName = "Pages";
-            this.pagesDataGridViewTextBoxColumn.Frozen = true;
-            this.pagesDataGridViewTextBoxColumn.HeaderText = "Pages";
-            this.pagesDataGridViewTextBoxColumn.Name = "pagesDataGridViewTextBoxColumn";
-            this.pagesDataGridViewTextBoxColumn.ReadOnly = true;
-            this.pagesDataGridViewTextBoxColumn.Width = 62;
-            // 
-            // booksBindingSource
-            // 
-            this.booksBindingSource.DataMember = "Books";
-            this.booksBindingSource.DataSource = this.aLLTABLESBindingSource;
-            // 
-            // aLLTABLESBindingSource
-            // 
-            this.aLLTABLESBindingSource.DataSource = this.aLL_TABLES;
-            this.aLLTABLESBindingSource.Position = 0;
-            // 
-            // aLL_TABLES
-            // 
-            this.aLL_TABLES.DataSetName = "ALL_TABLES";
-            this.aLL_TABLES.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // bookToolStripMenuItem
-            // 
-            this.bookToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addBookToolStripMenuItem});
-            this.bookToolStripMenuItem.Name = "bookToolStripMenuItem";
-            this.bookToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
-            this.bookToolStripMenuItem.Text = "Book";
-            // 
-            // addBookToolStripMenuItem
-            // 
-            this.addBookToolStripMenuItem.Name = "addBookToolStripMenuItem";
-            this.addBookToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.addBookToolStripMenuItem.Text = "Add book";
-            this.addBookToolStripMenuItem.Click += new System.EventHandler(this.addBookToolStripMenuItem_Click);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // booksBindingSource
+            // 
+            this.booksBindingSource.DataMember = "Books";
+            this.booksBindingSource.DataSource = this.dataSet1;
+            // 
+            // booksTableAdapter
+            // 
+            this.booksTableAdapter.ClearBeforeFill = true;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // titleDataGridViewTextBoxColumn
+            // 
+            this.titleDataGridViewTextBoxColumn.DataPropertyName = "Title";
+            this.titleDataGridViewTextBoxColumn.HeaderText = "Название книги:";
+            this.titleDataGridViewTextBoxColumn.Name = "titleDataGridViewTextBoxColumn";
+            this.titleDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // authorDataGridViewTextBoxColumn
+            // 
+            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
+            this.authorDataGridViewTextBoxColumn.HeaderText = "Автор:";
+            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // genreDataGridViewTextBoxColumn
+            // 
+            this.genreDataGridViewTextBoxColumn.DataPropertyName = "Genre";
+            this.genreDataGridViewTextBoxColumn.HeaderText = "Жанр:";
+            this.genreDataGridViewTextBoxColumn.Name = "genreDataGridViewTextBoxColumn";
+            this.genreDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Rating
+            // 
+            this.Rating.HeaderText = "Рейтинг:";
+            this.Rating.Name = "Rating";
+            // 
+            // pagesDataGridViewTextBoxColumn
+            // 
+            this.pagesDataGridViewTextBoxColumn.DataPropertyName = "Pages";
+            this.pagesDataGridViewTextBoxColumn.HeaderText = "Страницы:";
+            this.pagesDataGridViewTextBoxColumn.Name = "pagesDataGridViewTextBoxColumn";
+            this.pagesDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // Form1
             // 
@@ -279,10 +296,10 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pdf_Reader)).EndInit();
             this.tabPage_BookLibrary.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.booksBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aLLTABLESBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.aLL_TABLES)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -300,16 +317,19 @@
         private System.Windows.Forms.ListBox listBox_BooksOnMain;
         private System.Windows.Forms.ToolStripMenuItem syncToolStripMenuItem;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.BindingSource aLLTABLESBindingSource;
-        private ALL_TABLES aLL_TABLES;
-        private System.Windows.Forms.BindingSource booksBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pagesDataGridViewTextBoxColumn;
         private System.Windows.Forms.ToolStripMenuItem bookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addBookToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private DataSet1 dataSet1;
+        private System.Windows.Forms.BindingSource booksBindingSource;
+        private DataSet1TableAdapters.BooksTableAdapter booksTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn genreDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Rating;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pagesDataGridViewTextBoxColumn;
     }
 }
 

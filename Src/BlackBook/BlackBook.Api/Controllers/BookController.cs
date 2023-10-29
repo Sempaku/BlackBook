@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace BlackBook.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class BookController : ControllerBase
     {
         private readonly IBookStorageService _bookStorageService;

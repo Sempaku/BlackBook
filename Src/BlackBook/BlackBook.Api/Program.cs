@@ -32,11 +32,11 @@ namespace BlackBook.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            //builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql("Host=amvera-sempaku-run-pg-blackbook;Port=5432;Database=bb_test_db;Username=postgres;Password=2003;");
             });
 
             builder.Services.AddSingleton<IMegaClient, MegaClient>();

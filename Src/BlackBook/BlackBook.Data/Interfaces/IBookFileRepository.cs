@@ -1,4 +1,6 @@
 ﻿using BlackBook.Data.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlackBook.Data.Interfaces
 {

@@ -1,6 +1,9 @@
 ﻿using CG.Web.MegaApiClient;
 using Mega.Client;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace MegaService
 {

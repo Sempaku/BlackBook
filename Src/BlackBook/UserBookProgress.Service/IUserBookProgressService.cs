@@ -1,4 +1,5 @@
 ﻿using BlackBook.Data.Model;
+using System.Threading.Tasks;
 
 namespace UserBookProgressService
 {

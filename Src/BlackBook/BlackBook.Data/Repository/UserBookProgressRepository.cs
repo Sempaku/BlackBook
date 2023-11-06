@@ -1,6 +1,8 @@
 ﻿using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlackBook.Data.Repository
 {

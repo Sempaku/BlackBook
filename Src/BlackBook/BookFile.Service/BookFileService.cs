@@ -2,6 +2,9 @@
 using BlackBook.Data.Repository;
 using BookFiles.Service;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BookFileService
 {

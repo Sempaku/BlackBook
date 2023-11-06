@@ -1,6 +1,7 @@
 ﻿using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
 using BlackBook.Data.Repository;
+using System.Threading.Tasks;
 
 namespace UserBookProgressService
 {

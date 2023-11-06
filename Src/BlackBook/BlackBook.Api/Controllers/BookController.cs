@@ -5,7 +5,11 @@ using BookStorageService;
 using MegaService;
 using Microsoft.AspNetCore.Mvc;
 using RatingService;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace BlackBook.Api.Controllers
 {

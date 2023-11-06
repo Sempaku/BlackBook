@@ -1,4 +1,6 @@
-﻿namespace BlackBook.Api.Model
+﻿using Microsoft.AspNetCore.Http;
+
+namespace BlackBook.Api.Model
 {
     public class BookAddRequestModel
     {

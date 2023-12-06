@@ -11,5 +11,8 @@ namespace BookStorageService
         Task AddBookAsync(Book book, IFormFile file, Uri remoteFilePath);
 
         Task<List<Book>> GetAllBooksAsync();
+
+        Task RemoveBookAsync(Book book);
+        Task RemoveBookAsync(Uri fileUri);
     }
 }

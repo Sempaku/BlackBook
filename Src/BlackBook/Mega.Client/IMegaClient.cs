@@ -11,6 +11,8 @@ namespace Mega.Client
 
         Task<INode> UploadFileAsync(string filename);
 
+        Task DeleteFileAsync(INode file);
+
         Task<bool> CreateClientAsync(string email, string password);
 
         Task<Uri> GetDownloadLinkAsync(INode node);

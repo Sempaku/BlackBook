@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RatingService;
+using System;
+using System.Diagnostics;
 
 namespace BlackBook.Api
 {
@@ -32,12 +34,22 @@ namespace BlackBook.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
+#if DEBUG
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            Console.WriteLine("DEBUG configuration is active!");
+#endif
+#if RELEASE
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql("Host=amvera-sempaku-run-pg-blackbook;Port=5432;Database=bb_test_db;Username=postgres;Password=2003;");
             });
+            Console.WriteLine("RELEASE configuration is active!");
+
+#endif
 
             builder.Services.AddSingleton<IMegaClient, MegaClient>();
             builder.Services.AddSingleton<IMegaService, MegaService.MegaService>();

@@ -14,5 +14,7 @@ namespace MegaService
         Task<bool> LoginToMegaAsync(string email, string password);
 
         Task<Stream> GetBookByDownloadUrl(string url);
+
+        Task RemoveBook(Uri fileUri);
     }
 }

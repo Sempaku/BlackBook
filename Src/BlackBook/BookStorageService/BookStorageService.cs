@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStorageService
@@ -37,6 +38,17 @@ namespace BookStorageService
         {
             List<Book> books = await _bookRepository.GetAllBooksAsync();
             return books;
+        }
+
+        public async Task RemoveBookAsync(Book book)
+        {
+            await _bookRepository.DeleteBookAsync(book.Id);
+        }
+
+        public async Task RemoveBookAsync(Uri fileUri)
+        {
+            var books = await _bookRepository.GetAllBooksAsync();
+            await _bookRepository.DeleteBookAsync(books.First(book => book.BookFile.FilePath == fileUri.ToString()).Id);
         }
     }
 }

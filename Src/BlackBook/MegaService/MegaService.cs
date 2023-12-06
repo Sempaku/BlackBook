@@ -34,6 +34,12 @@ namespace MegaService
             return false;
         }
 
+        public async Task RemoveBook(Uri fileUri)
+        {
+            var node = await _megaClient.GetNodeFromLinkAsync(fileUri);
+            await _megaClient.DeleteFileAsync(node);
+        }
+
         public async Task<Uri?> UploadFormFileToMegaAsync(IFormFile file)
         {
             if (_megaClient == null)

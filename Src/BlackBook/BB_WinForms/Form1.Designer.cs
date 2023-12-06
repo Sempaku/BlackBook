@@ -41,18 +41,23 @@
             this.listBox_BooksOnMain = new System.Windows.Forms.ListBox();
             this.pdf_Reader = new AxAcroPDFLib.AxAcroPDF();
             this.tabPage_BookLibrary = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.dataSet1 = new BB_WinForms.DataSet1();
-            this.booksBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.booksTableAdapter = new BB_WinForms.DataSet1TableAdapters.BooksTableAdapter();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.titleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.genreDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Rating = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pagesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RatingDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.booksBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSet1 = new BB_WinForms.DataSet1();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.booksTableAdapter = new BB_WinForms.DataSet1TableAdapters.BooksTableAdapter();
+            this.comboBox_Filter1 = new System.Windows.Forms.ComboBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.comboBox_Filter2 = new System.Windows.Forms.ComboBox();
+            this.button_Filter = new System.Windows.Forms.Button();
+            this.comboBox_Filter1Value = new System.Windows.Forms.ComboBox();
+            this.comboBox_Filter2Value = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage_Main.SuspendLayout();
@@ -62,10 +67,10 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pdf_Reader)).BeginInit();
             this.tabPage_BookLibrary.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.booksBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -170,7 +175,7 @@
             // 
             // tabPage_BookLibrary
             // 
-            this.tabPage_BookLibrary.Controls.Add(this.tableLayoutPanel1);
+            this.tabPage_BookLibrary.Controls.Add(this.panel1);
             this.tabPage_BookLibrary.Location = new System.Drawing.Point(4, 22);
             this.tabPage_BookLibrary.Name = "tabPage_BookLibrary";
             this.tabPage_BookLibrary.Padding = new System.Windows.Forms.Padding(3);
@@ -179,24 +184,11 @@
             this.tabPage_BookLibrary.Text = "Library";
             this.tabPage_BookLibrary.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.92128F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.07872F));
-            this.tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1067, 471);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlLight;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -207,33 +199,14 @@
             this.titleDataGridViewTextBoxColumn,
             this.authorDataGridViewTextBoxColumn,
             this.genreDataGridViewTextBoxColumn,
-            this.Rating,
-            this.pagesDataGridViewTextBoxColumn});
+            this.pagesDataGridViewTextBoxColumn,
+            this.RatingDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.booksBindingSource;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView1.Location = new System.Drawing.Point(-3, 0);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(548, 465);
+            this.dataGridView1.Size = new System.Drawing.Size(546, 477);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // booksBindingSource
-            // 
-            this.booksBindingSource.DataMember = "Books";
-            this.booksBindingSource.DataSource = this.dataSet1;
-            // 
-            // booksTableAdapter
-            // 
-            this.booksTableAdapter.ClearBeforeFill = true;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -263,17 +236,94 @@
             this.genreDataGridViewTextBoxColumn.Name = "genreDataGridViewTextBoxColumn";
             this.genreDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // Rating
-            // 
-            this.Rating.HeaderText = "Рейтинг:";
-            this.Rating.Name = "Rating";
-            // 
             // pagesDataGridViewTextBoxColumn
             // 
             this.pagesDataGridViewTextBoxColumn.DataPropertyName = "Pages";
             this.pagesDataGridViewTextBoxColumn.HeaderText = "Страницы:";
             this.pagesDataGridViewTextBoxColumn.Name = "pagesDataGridViewTextBoxColumn";
             this.pagesDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // RatingDataGridViewTextBoxColumn
+            // 
+            this.RatingDataGridViewTextBoxColumn.DataPropertyName = "Rating";
+            this.RatingDataGridViewTextBoxColumn.HeaderText = "Рейтинг:";
+            this.RatingDataGridViewTextBoxColumn.Name = "RatingDataGridViewTextBoxColumn";
+            // 
+            // booksBindingSource
+            // 
+            this.booksBindingSource.DataMember = "Books";
+            this.booksBindingSource.DataSource = this.dataSet1;
+            // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // booksTableAdapter
+            // 
+            this.booksTableAdapter.ClearBeforeFill = true;
+            // 
+            // comboBox_Filter1
+            // 
+            this.comboBox_Filter1.FormattingEnabled = true;
+            this.comboBox_Filter1.Location = new System.Drawing.Point(549, 21);
+            this.comboBox_Filter1.Name = "comboBox_Filter1";
+            this.comboBox_Filter1.Size = new System.Drawing.Size(155, 21);
+            this.comboBox_Filter1.TabIndex = 2;
+            this.comboBox_Filter1.SelectedValueChanged += new System.EventHandler(this.comboBox_Filter1_SelectedValueChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.comboBox_Filter2Value);
+            this.panel1.Controls.Add(this.comboBox_Filter1Value);
+            this.panel1.Controls.Add(this.button_Filter);
+            this.panel1.Controls.Add(this.comboBox_Filter2);
+            this.panel1.Controls.Add(this.comboBox_Filter1);
+            this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1067, 471);
+            this.panel1.TabIndex = 3;
+            // 
+            // comboBox_Filter2
+            // 
+            this.comboBox_Filter2.FormattingEnabled = true;
+            this.comboBox_Filter2.Location = new System.Drawing.Point(549, 59);
+            this.comboBox_Filter2.Name = "comboBox_Filter2";
+            this.comboBox_Filter2.Size = new System.Drawing.Size(155, 21);
+            this.comboBox_Filter2.TabIndex = 3;
+            this.comboBox_Filter2.SelectedValueChanged += new System.EventHandler(this.comboBox_Filter2_SelectedValueChanged);
+            // 
+            // button_Filter
+            // 
+            this.button_Filter.Location = new System.Drawing.Point(924, 21);
+            this.button_Filter.Name = "button_Filter";
+            this.button_Filter.Size = new System.Drawing.Size(124, 59);
+            this.button_Filter.TabIndex = 4;
+            this.button_Filter.Text = "Filter";
+            this.button_Filter.UseVisualStyleBackColor = true;
+            this.button_Filter.Click += new System.EventHandler(this.button_Filter_Click);
+            // 
+            // comboBox_Filter1Value
+            // 
+            this.comboBox_Filter1Value.FormattingEnabled = true;
+            this.comboBox_Filter1Value.Location = new System.Drawing.Point(741, 21);
+            this.comboBox_Filter1Value.Name = "comboBox_Filter1Value";
+            this.comboBox_Filter1Value.Size = new System.Drawing.Size(155, 21);
+            this.comboBox_Filter1Value.TabIndex = 5;
+            // 
+            // comboBox_Filter2Value
+            // 
+            this.comboBox_Filter2Value.FormattingEnabled = true;
+            this.comboBox_Filter2Value.Location = new System.Drawing.Point(741, 59);
+            this.comboBox_Filter2Value.Name = "comboBox_Filter2Value";
+            this.comboBox_Filter2Value.Size = new System.Drawing.Size(155, 21);
+            this.comboBox_Filter2Value.TabIndex = 6;
             // 
             // Form1
             // 
@@ -296,10 +346,10 @@
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pdf_Reader)).EndInit();
             this.tabPage_BookLibrary.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.booksBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -320,7 +370,6 @@
         private System.Windows.Forms.ToolStripMenuItem bookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addBookToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private DataSet1 dataSet1;
         private System.Windows.Forms.BindingSource booksBindingSource;
         private DataSet1TableAdapters.BooksTableAdapter booksTableAdapter;
@@ -328,8 +377,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn genreDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Rating;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RatingDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn pagesDataGridViewTextBoxColumn;
+        private System.Windows.Forms.ComboBox comboBox_Filter1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button_Filter;
+        private System.Windows.Forms.ComboBox comboBox_Filter2;
+        private System.Windows.Forms.ComboBox comboBox_Filter2Value;
+        private System.Windows.Forms.ComboBox comboBox_Filter1Value;
     }
 }
 

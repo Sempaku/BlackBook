@@ -84,6 +84,33 @@ namespace BB_WinForms
             }
         }
 
+        public static async Task<bool> RemoveBook(BookModel book)
+        {
+            string fileUrl = book.BookFile.FilePath;
+            Uri uri = new Uri(fileUrl);
+
+            try
+            {
+                HttpResponseMessage response = await SendPostRequestAsync(ApplicationData.REMOVE_BOOK, uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    // Обработка ошибки, если запрос не был успешным.
+                    MessageBox.Show($"Ошибка: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
         public static async Task<bool> AddBook(BookAddRequestModel book, string filePath)
         {
             using (var httpClient = new HttpClient())

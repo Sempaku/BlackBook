@@ -8,10 +8,12 @@ namespace UserBookProgressService
     public class UserBookProgressService : IUserBookProgressService
     {
         private readonly IUserBookProgressRepository _userBookProgressRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public UserBookProgressService(IUserBookProgressRepository userBookProgressRepository)
+        public UserBookProgressService(IUserBookProgressRepository userBookProgressRepository, IBookRepository bookRepository)
         {
             _userBookProgressRepository = userBookProgressRepository;
+            _bookRepository = bookRepository;
         }
 
         public async Task<UserBookProgress> CreateUserBookProgressAsync(int bookId, int lastReadPage)
@@ -30,6 +32,13 @@ namespace UserBookProgressService
         public async Task<UserBookProgress> GetUserBookProgressByIdAsync(int id)
         {
             return await _userBookProgressRepository.GetUserBookProgressByIdAsync(id);
+        }
+
+        public async Task<bool> ModifyLastReadPageByBookIdAsync(int bookId, int lastReadPage)
+        {
+            var book = await _bookRepository.GetBookByIdAsync(bookId);
+            book.UserBookProgress.LastReadPage = lastReadPage;
+            return await _userBookProgressRepository.UpdateUserBookProgressAsync(book.UserBookProgress);
         }
     }
 }

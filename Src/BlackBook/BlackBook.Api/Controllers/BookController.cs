@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using UserBookProgressService;
 
 namespace BlackBook.Api.Controllers
 {
@@ -19,13 +20,15 @@ namespace BlackBook.Api.Controllers
     {
         private readonly IBookStorageService _bookStorageService;
         private readonly IRatingService _ratingService;
+        private readonly IUserBookProgressService _userBookProgressService;
         private readonly IMegaService _megaService;
 
-        public BookController(IBookStorageService bookStorageService, IMegaService megaService, IRatingService ratingService)
+        public BookController(IBookStorageService bookStorageService, IMegaService megaService, IRatingService ratingService, IUserBookProgressService userBookProgressService)
         {
             _bookStorageService = bookStorageService;
             _megaService = megaService;
             _ratingService = ratingService;
+            _userBookProgressService = userBookProgressService;
         }
 
         [HttpGet("GetAllBooks")]
@@ -118,11 +121,27 @@ namespace BlackBook.Api.Controllers
             return BadRequest(false);
         }
 
+        [HttpPost("SetLastReadPage")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> SetLastReadPage(JsonElement lastReadPageRequest)
+        {
+            if (lastReadPageRequest.TryGetProperty("bookId", out var bookIdElement) && lastReadPageRequest.TryGetProperty("lastReadPage", out var lastReadPageElement))
+            {
+                if (int.TryParse(bookIdElement.ToString(), out int bookId)
+                    && int.TryParse(lastReadPageElement.ToString(), out int lastReadPage))
+                {
+                    return Ok(await _userBookProgressService.ModifyLastReadPageByBookIdAsync(bookId, lastReadPage));
+                }
+            }
+
+            return BadRequest(false);
+        }
+
         [HttpPost("RemoveBook")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> RemoveBook([FromBody] Uri fileUri)
         {
-            await _bookStorageService.RemoveBookAsync(fileUri);
+            //await _bookStorageService.RemoveBookAsync(fileUri);
             await _megaService.RemoveBook(fileUri);
             return Ok();
         }

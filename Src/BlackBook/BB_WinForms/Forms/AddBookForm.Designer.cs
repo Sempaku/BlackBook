@@ -104,6 +104,7 @@
             this.textBox_pages.Font = new System.Drawing.Font("Arial", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox_pages.Location = new System.Drawing.Point(137, 159);
             this.textBox_pages.Name = "textBox_pages";
+            this.textBox_pages.ReadOnly = true;
             this.textBox_pages.Size = new System.Drawing.Size(488, 40);
             this.textBox_pages.TabIndex = 7;
             // 

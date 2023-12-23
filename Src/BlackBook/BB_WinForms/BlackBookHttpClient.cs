@@ -222,5 +222,36 @@ namespace BB_WinForms
                 return false;
             }
         }
+
+        internal static async Task<bool> SetLastReadPageByBook(int id, int currentPage)
+        {
+            var obj = new
+            {
+                bookId = id,
+                lastReadPage = currentPage,
+            };
+
+            try
+            {
+                HttpResponseMessage response = await SendPostRequestAsync(ApplicationData.SET_LAST_READ_PAGE, obj);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Последняя прочитанная страница сохранена!");
+                    return true;
+                }
+                else
+                {
+                    // Обработка ошибки, если запрос не был успешным.
+                    MessageBox.Show($"Не удалось изменить последнюю прочитанную страницу: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

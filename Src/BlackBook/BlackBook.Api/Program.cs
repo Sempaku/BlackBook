@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using RatingService;
 using System;
 using System.Diagnostics;
+using UserBookProgressService;
 
 namespace BlackBook.Api
 {
@@ -59,6 +60,8 @@ namespace BlackBook.Api
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             builder.Services.AddScoped<IBookStorageService, BookStorageService.BookStorageService>();
             builder.Services.AddScoped<IRatingService, RatingService.RatingService>();
+            builder.Services.AddScoped<IUserBookProgressService, UserBookProgressService.UserBookProgressService>();
+
 
             var app = builder.Build();
 

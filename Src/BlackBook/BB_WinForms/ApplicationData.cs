@@ -12,6 +12,7 @@ namespace BB_WinForms
         public const string REMOVE_BOOK = REMOTE_HOST + "/api/Book/RemoveBook";
         public const string ADD_BOOK = REMOTE_HOST + "/api/Book/AddBook";
         public const string SET_BOOK_RATING = REMOTE_HOST + "/api/Book/SetBookRating";
+        public const string SET_LAST_READ_PAGE = REMOTE_HOST + "/api/Book/SetLastReadPage";
 
         public static string LocalFileStorage { get; } = Directory.GetCurrentDirectory();
     }

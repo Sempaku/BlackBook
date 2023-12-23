@@ -1,6 +1,7 @@
 ﻿using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,10 +32,19 @@ namespace BlackBook.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateUserBookProgressAsync(UserBookProgress userBookProgress)
+        public async Task<bool> UpdateUserBookProgressAsync(UserBookProgress userBookProgress)
         {
-            _context.Entry(userBookProgress).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Entry(userBookProgress).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
+
     }
 }

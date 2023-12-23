@@ -9,7 +9,7 @@ namespace Mega.Client
 {
     public class MegaClient : IMegaClient
     {
-        private const string SYS_DIRECTORY_NAME = ".blackbook_sys";
+        private const string SYS_DIRECTORY_NAME = "test";
         private MegaApiClient? _client;
         private INode? _sysDirectory;
 
@@ -87,7 +87,7 @@ namespace Mega.Client
 
         public async Task DeleteFileAsync(INode file)
         {
-            await _client.DeleteAsync(file, false);
+            await Task.Run(() => _client.Delete(file, false));
         }
     }
 }

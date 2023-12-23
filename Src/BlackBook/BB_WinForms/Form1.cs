@@ -1,9 +1,12 @@
 ﻿using BB_WinForms.DbUtils;
 using BB_WinForms.Forms;
 using BB_WinForms.Models;
+using Patagames.Pdf.Net;
+using Patagames.Pdf.Net.Controls.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,15 +17,19 @@ namespace BB_WinForms
     public partial class Form1 : Form
     {
         private List<BookModel> _books;
+        private PdfViewer _pdfViewer = new PdfViewer();
+        private BookModel _currentBook;
 
         public Form1()
         {
+            PdfCommon.Initialize();
             InitializeComponent();
+            InitDataGridViewContextMenu();
             var res = MegaAuth.GetResult();
             MessageBox.Show(res.ToString());
-            UpdateDataGridView();
+            UpdateDataGridView().GetAwaiter();
             UpdateFilterComboBox();
-            
+            AddPdfViewer();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -41,10 +48,12 @@ namespace BB_WinForms
             // Получите выбранное имя книги из listBox
             string selectedBookName = listBox_BooksOnMain.SelectedItem as string;
             var book = _books.Where(b => b.Title == selectedBookName).FirstOrDefault();
+            _currentBook = book;
+            var lastReadPage = _currentBook.UserBookProgress.LastReadPage;
 
             if (BookContainInLocalDirectory(book.BookFile.FileName))
             {
-                OpenBookInPdfReader($"{ApplicationData.LocalFileStorage}/{book.BookFile.FileName}");
+                OpenBookInPdfReader($"{ApplicationData.LocalFileStorage}/{book.BookFile.FileName}", lastReadPage);
             }
             else
             {
@@ -52,7 +61,7 @@ namespace BB_WinForms
                 {
                     if (await BlackBookHttpClient.DownloadBook(book))
                     {
-                        OpenBookInPdfReader($@"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}");
+                        OpenBookInPdfReader($@"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}", lastReadPage);
                     }
                 }
             }
@@ -71,9 +80,10 @@ namespace BB_WinForms
             return false;
         }
 
-        private void OpenBookInPdfReader(string pathToBook)
+        private void OpenBookInPdfReader(string pathToBook, int lastReadPage)
         {
-            pdf_Reader.src = pathToBook;
+            _pdfViewer.LoadDocument(pathToBook);
+            _pdfViewer.ScrollToPage(lastReadPage);
         }
 
         private async void syncToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,7 +95,7 @@ namespace BB_WinForms
             {
                 listBox_BooksOnMain.Items.AddRange(_books.Select(b => b.Title).ToArray());
             });
-
+            await UpdateLastReadPage();
             await UpdateDataGridView();
         }
 
@@ -105,6 +115,7 @@ namespace BB_WinForms
             dt.Columns.Add("Genre", typeof(string)); 
             dt.Columns.Add("Rating", typeof(int));
             dt.Columns.Add("Pages", typeof(string));
+            dt.Columns.Add("PagesRead", typeof(string));
 
             // Добавьте данные из списка books в DataTable
             foreach (var book in books)
@@ -115,6 +126,7 @@ namespace BB_WinForms
                 row["Author"] = book.Author;                
                 row["Genre"] = book.Genre;
                 row["Rating"] = book.Rating.BookRating.ToString();
+                row["PagesRead"] = book.UserBookProgress.LastReadPage.ToString();
                 row["Pages"] = book.Pages;
                 dt.Rows.Add(row);
             }
@@ -199,7 +211,7 @@ namespace BB_WinForms
 
         private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.ColumnIndex == 4 && e.RowIndex >= 0)
+            if(e.ColumnIndex == 6 && e.RowIndex >= 0)
             {
                 var changedValue = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 var bookId = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -209,13 +221,27 @@ namespace BB_WinForms
 
         private void button_Filter_Click(object sender, EventArgs e)
         {
-            BookColumn filter1Property = BookColumnsHelper.GetColumn(comboBox_Filter1.Text);
-            BookColumn filter2Property = BookColumnsHelper.GetColumn(comboBox_Filter2.Text);
-            var filter1Value = comboBox_Filter1Value.Text;
-            var filter2Value = comboBox_Filter2Value.Text;
+            List<BookModel> filterResult = new List<BookModel>();
+            if (!string.IsNullOrWhiteSpace(comboBox_Filter1.Text))
+            {
+                BookColumn filter1Property = BookColumnsHelper.GetColumn(comboBox_Filter1.Text);
+                var filter1Value = comboBox_Filter1Value.Text;
+                if (filterResult.Count > 0)
+                    filterResult = FilterBook(filterResult, filter1Property, filter1Value);
+                else
+                    filterResult = FilterBook(_books, filter1Property, filter1Value);
 
-            var result = FilterBook(_books, filter1Property, filter1Value);
-            result = FilterBook(result, filter2Property, filter2Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(comboBox_Filter2.Text))
+            {
+                BookColumn filter2Property = BookColumnsHelper.GetColumn(comboBox_Filter2.Text);
+                var filter2Value = comboBox_Filter2Value.Text;
+                if (filterResult.Count > 0)
+                    filterResult = FilterBook(filterResult, filter2Property, filter2Value);
+                else
+                    filterResult = FilterBook(_books, filter2Property, filter2Value);
+            }
 
             DataTable dt = new DataTable();
 
@@ -225,8 +251,10 @@ namespace BB_WinForms
             dt.Columns.Add("Genre", typeof(string));
             dt.Columns.Add("Rating", typeof(int));
             dt.Columns.Add("Pages", typeof(string));
+            dt.Columns.Add("PagesRead", typeof(string));
 
-            foreach (var book in result)
+
+            foreach (var book in filterResult)
             {
                 DataRow row = dt.NewRow();
                 row["Id"] = book.Id;
@@ -235,6 +263,8 @@ namespace BB_WinForms
                 row["Genre"] = book.Genre;
                 row["Rating"] = book.Rating.BookRating.ToString();
                 row["Pages"] = book.Pages;
+                row["PagesRead"] = book.UserBookProgress.LastReadPage;
+
                 dt.Rows.Add(row);
             }
 
@@ -267,9 +297,96 @@ namespace BB_WinForms
                 case BookColumn.Pages:
                     query = query.Where(book => book.Pages.ToString() == filterValue);
                     break;
+
+                case BookColumn.PagesRead:
+                    query = query.Where(book => book.UserBookProgress.LastReadPage.ToString() == filterValue);
+                    break;
             }
 
             return query.ToList();
+        }
+
+        private async void button_ClearFilter_Click(object sender, EventArgs e)
+        {
+            comboBox_Filter1.Text = string.Empty;
+            comboBox_Filter1Value.Text = string.Empty;
+            comboBox_Filter2.Text = string.Empty;
+            comboBox_Filter2Value.Text = string.Empty;
+            await UpdateDataGridView();
+        }
+
+        private void InitDataGridViewContextMenu()
+        {
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.MenuItems.Add("Удалить", new EventHandler(DeleteMenuItem_Click));
+
+            dataGridView1.ContextMenu = contextMenu;
+
+        }
+
+        // Обработчик события нажатия на DataGridView
+        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                DataGridView.HitTestInfo hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
+                if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex];
+                    dataGridView1.ContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
+                }
+            }
+        }
+
+        private async void DeleteMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                var bookName = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+                var bookAuthor = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
+                var bookGenre = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
+                var bookPages = dataGridView1.SelectedRows[0].Cells[4].Value.ToString();
+
+                var book = _books
+                    .Where(b => b.Title == bookName && 
+                           b.Author == bookAuthor && 
+                           b.Genre == bookGenre && 
+                           b.Pages.ToString() == bookPages)
+                    .FirstOrDefault();
+
+                if (await BlackBookHttpClient.RemoveBook(book))
+                {
+                    DeleteLocalFile(book.BookFile.FileName);
+                    _books.Remove(book);
+                    await UpdateDataGridView();
+                }
+            }
+        }
+
+        private void DeleteLocalFile(string fileName)
+        {
+            var path = $"{Directory.GetCurrentDirectory()}\\{fileName}";
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
+        private async Task UpdateLastReadPage()
+        {
+            if (_currentBook == null) return;
+            
+            var currentPage = _pdfViewer.CurrentPage.PageIndex;
+            _currentBook.UserBookProgress.LastReadPage = currentPage;
+            await BlackBookHttpClient.SetLastReadPageByBook(_currentBook.Id, currentPage);
+
+            MessageBox.Show(currentPage.ToString());
+        }
+
+        public void AddPdfViewer()
+        {
+            _pdfViewer.Dock = DockStyle.Fill;
+            this.splitContainer1.Panel2.Controls.Add(_pdfViewer);
         }
     }
 
@@ -280,7 +397,8 @@ namespace BB_WinForms
         Author,
         Genre,
         Rating,
-        Pages
+        Pages,
+        PagesRead
     }
 
     public static class BookColumnsHelper
@@ -296,6 +414,7 @@ namespace BB_WinForms
             {new string[] { "Жанр:", "Genre" }, BookColumn.Genre},
             {new string[] { "Рейтинг:" ,"Rating" }, BookColumn.Rating},
             {new string[] { "Страницы:" ,"Pages" }, BookColumn.Pages},
+            {new string[] { "Страниц прочитано:" ,"PagesRead" }, BookColumn.PagesRead},
         };
 
         public static BookColumn GetColumn(string columnName)

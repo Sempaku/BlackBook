@@ -15,7 +15,7 @@ namespace BlackBook.Data.Model
         /// <summary> Автор книги </summary>
         [Required]
         public string Author { get; set; }
-        
+
         /// <summary> Жанр книги </summary>
         [Required]
         public string Genre { get; set; }

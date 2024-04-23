@@ -8,6 +8,7 @@ namespace UserBookProgressService
         Task<UserBookProgress> CreateUserBookProgressAsync(int bookId, int lastReadPage);
 
         Task<UserBookProgress> GetUserBookProgressByIdAsync(int id);
+
         Task<bool> ModifyLastReadPageByBookIdAsync(int bookId, int lastReadPage);
     }
 }

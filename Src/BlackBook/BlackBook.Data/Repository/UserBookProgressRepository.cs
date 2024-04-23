@@ -45,6 +45,5 @@ namespace BlackBook.Data.Repository
                 return false;
             }
         }
-
     }
 }

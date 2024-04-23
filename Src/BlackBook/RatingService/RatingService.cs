@@ -1,10 +1,5 @@
 ﻿using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
-using BlackBook.Data.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RatingService
@@ -19,6 +14,7 @@ namespace RatingService
             _ratingRepository = ratingRepository;
             _bookRepository = bookRepository;
         }
+
         public async Task<Rating> CreateRatingAsync(int bookId, int rating)
         {
             var bookRating = new Rating

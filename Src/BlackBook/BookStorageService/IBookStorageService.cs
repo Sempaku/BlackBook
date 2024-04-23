@@ -13,6 +13,7 @@ namespace BookStorageService
         Task<List<Book>> GetAllBooksAsync();
 
         Task RemoveBookAsync(Book book);
+
         Task RemoveBookAsync(Uri fileUri);
     }
 }

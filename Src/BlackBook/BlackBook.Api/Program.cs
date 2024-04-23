@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RatingService;
 using System;
-using System.Diagnostics;
 using UserBookProgressService;
 
 namespace BlackBook.Api
@@ -28,6 +27,7 @@ namespace BlackBook.Api
             builder.Services.AddRazorPages(options =>
             {
                 options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+                options.Conventions.AddPageRoute("/BookAction/ViewBook", "/BookAction/ViewBook/{id}");
             });
 
             builder.Services.AddControllers();
@@ -62,7 +62,6 @@ namespace BlackBook.Api
             builder.Services.AddScoped<IRatingService, RatingService.RatingService>();
             builder.Services.AddScoped<IUserBookProgressService, UserBookProgressService.UserBookProgressService>();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -78,6 +77,7 @@ namespace BlackBook.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseStaticFiles();
 
             app.MapControllers();
             app.MapRazorPages();

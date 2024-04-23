@@ -11,6 +11,7 @@ namespace BB_WinForms.Forms
         private static string _filenamePath = "";
         private static int _countPages = 0;
         private static TextBox reference;
+
         public AddBookForm()
         {
             InitializeComponent();

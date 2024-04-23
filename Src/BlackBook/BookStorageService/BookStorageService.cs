@@ -30,7 +30,7 @@ namespace BookStorageService
 
             book.BookFile = bookFile;
             book.UserBookProgress = new UserBookProgress { BookId = book.Id, LastReadPage = 0 };
-            book.Rating = new Rating { BookId = book.Id , BookRating = 0};
+            book.Rating = new Rating { BookId = book.Id, BookRating = 0 };
             await _bookRepository.AddBookAsync(book);
         }
 

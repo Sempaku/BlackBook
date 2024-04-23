@@ -197,7 +197,8 @@ namespace BB_WinForms
         {
             var obj = new
             {
-                bookId = bookId, rating = changedValue,
+                bookId = bookId,
+                rating = changedValue,
             };
 
             try

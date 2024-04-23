@@ -43,7 +43,7 @@ namespace BlackBook.Data.Repository
             catch (Exception)
             {
                 return false;
-            }            
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BlackBook.Api.Model;
-using BlackBook.Data.Interfaces;
 using BlackBook.Data.Model;
 using BookStorageService;
 using MegaService;
@@ -15,7 +14,7 @@ using UserBookProgressService;
 namespace BlackBook.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
     public class BookController : ControllerBase
     {
         private readonly IBookStorageService _bookStorageService;
@@ -111,8 +110,8 @@ namespace BlackBook.Api.Controllers
         {
             if (ratingRequest.TryGetProperty("bookId", out var bookIdElement) && ratingRequest.TryGetProperty("rating", out var ratingElement))
             {
-                if (int.TryParse(bookIdElement.ToString(), out int bookId) 
-                    && int.TryParse(ratingElement.ToString(),out int rating))
+                if (int.TryParse(bookIdElement.ToString(), out int bookId)
+                    && int.TryParse(ratingElement.ToString(), out int rating))
                 {
                     return Ok(await _ratingService.ModifyRatingByBookIdAsync(bookId, rating));
                 }

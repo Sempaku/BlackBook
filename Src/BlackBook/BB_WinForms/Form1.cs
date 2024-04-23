@@ -1,5 +1,4 @@
-﻿using BB_WinForms.DbUtils;
-using BB_WinForms.Forms;
+﻿using BB_WinForms.Forms;
 using BB_WinForms.Models;
 using Patagames.Pdf.Net;
 using Patagames.Pdf.Net.Controls.WinForms;
@@ -34,7 +33,6 @@ namespace BB_WinForms
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-
             _books = await BlackBookHttpClient.GetAllBooksAsync();
             // Чтобы обновить элементы управления из основного потока
             listBox_BooksOnMain.Invoke((MethodInvoker)delegate
@@ -112,7 +110,7 @@ namespace BB_WinForms
             dt.Columns.Add("Id", typeof(int));
             dt.Columns.Add("Title", typeof(string));
             dt.Columns.Add("Author", typeof(string));
-            dt.Columns.Add("Genre", typeof(string)); 
+            dt.Columns.Add("Genre", typeof(string));
             dt.Columns.Add("Rating", typeof(int));
             dt.Columns.Add("Pages", typeof(string));
             dt.Columns.Add("PagesRead", typeof(string));
@@ -123,7 +121,7 @@ namespace BB_WinForms
                 DataRow row = dt.NewRow();
                 row["Id"] = book.Id;
                 row["Title"] = book.Title;
-                row["Author"] = book.Author;                
+                row["Author"] = book.Author;
                 row["Genre"] = book.Genre;
                 row["Rating"] = book.Rating.BookRating.ToString();
                 row["PagesRead"] = book.UserBookProgress.LastReadPage.ToString();
@@ -182,7 +180,6 @@ namespace BB_WinForms
                 var column = dataGridView1.Columns[i];
                 if (column.HeaderText == columnHeaderText)
                     return i;
-
             }
             return -1;
         }
@@ -211,7 +208,7 @@ namespace BB_WinForms
 
         private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.ColumnIndex == 6 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 6 && e.RowIndex >= 0)
             {
                 var changedValue = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 var bookId = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -230,7 +227,6 @@ namespace BB_WinForms
                     filterResult = FilterBook(filterResult, filter1Property, filter1Value);
                 else
                     filterResult = FilterBook(_books, filter1Property, filter1Value);
-
             }
 
             if (!string.IsNullOrWhiteSpace(comboBox_Filter2.Text))
@@ -253,7 +249,6 @@ namespace BB_WinForms
             dt.Columns.Add("Pages", typeof(string));
             dt.Columns.Add("PagesRead", typeof(string));
 
-
             foreach (var book in filterResult)
             {
                 DataRow row = dt.NewRow();
@@ -269,7 +264,6 @@ namespace BB_WinForms
             }
 
             dataGridView1.DataSource = dt;
-            
         }
 
         private List<BookModel> FilterBook(List<BookModel> books, BookColumn filterField, string filterValue)
@@ -321,7 +315,6 @@ namespace BB_WinForms
             contextMenu.MenuItems.Add("Удалить", new EventHandler(DeleteMenuItem_Click));
 
             dataGridView1.ContextMenu = contextMenu;
-
         }
 
         // Обработчик события нажатия на DataGridView
@@ -348,9 +341,9 @@ namespace BB_WinForms
                 var bookPages = dataGridView1.SelectedRows[0].Cells[4].Value.ToString();
 
                 var book = _books
-                    .Where(b => b.Title == bookName && 
-                           b.Author == bookAuthor && 
-                           b.Genre == bookGenre && 
+                    .Where(b => b.Title == bookName &&
+                           b.Author == bookAuthor &&
+                           b.Genre == bookGenre &&
                            b.Pages.ToString() == bookPages)
                     .FirstOrDefault();
 
@@ -375,7 +368,7 @@ namespace BB_WinForms
         private async Task UpdateLastReadPage()
         {
             if (_currentBook == null) return;
-            
+
             var currentPage = _pdfViewer.CurrentPage.PageIndex;
             _currentBook.UserBookProgress.LastReadPage = currentPage;
             await BlackBookHttpClient.SetLastReadPageByBook(_currentBook.Id, currentPage);
@@ -391,7 +384,7 @@ namespace BB_WinForms
     }
 
     public enum BookColumn
-    {        
+    {
         Id,
         Title,
         Author,

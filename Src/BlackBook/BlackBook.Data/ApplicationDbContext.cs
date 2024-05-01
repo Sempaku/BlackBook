@@ -18,7 +18,9 @@ namespace BlackBook.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
+
 
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.UserBookProgress)

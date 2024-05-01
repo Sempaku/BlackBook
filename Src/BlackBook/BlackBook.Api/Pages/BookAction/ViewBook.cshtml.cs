@@ -3,6 +3,7 @@ using BookStorageService;
 using MegaService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace BlackBook.Api.Pages.BookAction
         private readonly IBookStorageService _bookStorageService;
 
         public BookFile BookFile { get; set; }
+        public Book Book { get; set; }
         public string PathToBook { get; set; }
         public byte[] PdfContent { get; set; }
 
@@ -31,7 +33,10 @@ namespace BlackBook.Api.Pages.BookAction
         public async Task<IActionResult> OnGetAsync(int id)
         {
             // Получаем ID книги из параметра маршрута
-            var bookFile = (await _bookStorageService.GetAllBooksAsync()).Find(b => b.Id == id)?.BookFile;
+            var book = (await _bookStorageService.GetAllBooksAsync()).Find(b => b.Id == id);
+            Book = book ?? throw new ArgumentNullException(nameof(book));
+
+            var bookFile = book.BookFile;
             if (bookFile == null)
             {
                 return NotFound();

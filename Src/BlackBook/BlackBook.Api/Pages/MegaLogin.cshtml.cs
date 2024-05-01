@@ -27,7 +27,7 @@ namespace BlackBook.Api.Pages
                 if (success)
                 {
                     ApplicationData.IsConnectedToMega = true;
-                    Response.Redirect("/Index"); // Переход на главную страницу
+                    Response.Redirect("/Library"); // Переход на главную страницу
                 }
                 else
                 {

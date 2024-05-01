@@ -140,7 +140,7 @@ namespace BlackBook.Api.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> RemoveBook([FromBody] Uri fileUri)
         {
-            //await _bookStorageService.RemoveBookAsync(fileUri);
+            await _bookStorageService.RemoveBookAsync(fileUri);
             await _megaService.RemoveBook(fileUri);
             return Ok();
         }

@@ -38,6 +38,31 @@ namespace BlackBook.Api.Controllers
             return Ok(books);
         }
 
+        [HttpGet("SearchBooks")]
+        [ProducesResponseType(typeof(List<Book>), 200)]
+        public async Task<IActionResult> SearchBooks([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Ok(await _bookStorageService.GetAllBooksAsync());
+            }
+
+            var books = await _bookStorageService.SearchBooksAsync(query.Trim());
+            return Ok(books);
+        }
+
+        [HttpGet("GetBookById")]
+        [ProducesResponseType(typeof(Book), 200)]
+        public async Task<IActionResult> GetBookById([FromQuery] int id)
+        {
+            var book = await _bookStorageService.GetBookAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok(book);
+        }
+
         [HttpPost("DownloadBookByDownloadUrl")]
         [ProducesResponseType(typeof(Stream), 200)]
         public async Task<IActionResult> GetBookByDownloadUrl([FromBody] Uri url)
@@ -71,37 +96,64 @@ namespace BlackBook.Api.Controllers
                 return BadRequest("Invalid input data.");
             }
 
-            if (model.File == null || model.File.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
+            Uri uri = null;
 
-            if (!ApplicationData.IsConnectedToMega)
+            // Файл книги необязателен: без него книга создаётся с данными и оглавлением
+            if (model.File != null && model.File.Length > 0)
             {
-                return BadRequest("Please, connect to MEGA.");
-            }
-
-            using (var stream = model.File.OpenReadStream())
-            {
-                var book = new Book
+                if (!ApplicationData.IsConnectedToMega)
                 {
-                    Title = model.Title,
-                    Author = model.Author,
-                    Genre = model.Genre,
-                    Pages = model.Pages
-                };
+                    return BadRequest("Please, connect to MEGA.");
+                }
 
-                var uri = await _megaService.UploadStreamToMegaAsync(stream, Guid.NewGuid() + model.File.FileName);
+                using (var stream = model.File.OpenReadStream())
+                {
+                    uri = await _megaService.UploadStreamToMegaAsync(stream, Guid.NewGuid() + model.File.FileName);
+                }
 
                 if (uri == null)
                 {
                     return BadRequest("Wrong file...");
                 }
-
-                await _bookStorageService.AddBookAsync(book, model.File, uri);
-
-                return Ok("Book added successfully.");
             }
+
+            var book = new Book
+            {
+                Title = model.Title,
+                Author = model.Author,
+                Genre = model.Genre,
+                Year = model.Year,
+                Pages = model.Pages,
+                Toc = model.Toc   // сервис обернёт HTML редактора в XML
+            };
+
+            await _bookStorageService.AddBookAsync(book, model.File, uri);
+
+            return Ok("Book added successfully.");
+        }
+
+        [HttpPost("UpdateBook")]
+        public async Task<IActionResult> UpdateBook([FromForm] BookEditModel model)
+        {
+            if (model == null || model.Id <= 0)
+            {
+                return BadRequest("Invalid input data.");
+            }
+
+            var book = new Book
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Author = model.Author,
+                Genre = model.Genre,
+                Year = model.Year,
+                Pages = model.Pages,
+                Toc = model.Toc
+            };
+
+            await _bookStorageService.UpdateBookAsync(book);
+
+            return Ok("Book updated successfully.");
         }
 
         [HttpPost("SetBookRating")]

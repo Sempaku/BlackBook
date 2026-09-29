@@ -36,7 +36,10 @@ namespace BlackBook.Data.Repository
         {
             try
             {
-                _context.Entry(userBookProgress).State = EntityState.Modified;
+                var existing = await _context.UserBookProgress.FindAsync(userBookProgress.Id);
+                if (existing == null) return false;
+                
+                existing.LastReadPage = userBookProgress.LastReadPage;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -44,6 +47,11 @@ namespace BlackBook.Data.Repository
             {
                 return false;
             }
+        }
+
+        public void Attach(UserBookProgress userBookProgress)
+        {
+            _context.UserBookProgress.Attach(userBookProgress);
         }
     }
 }

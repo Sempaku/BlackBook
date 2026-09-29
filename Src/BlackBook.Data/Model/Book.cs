@@ -24,6 +24,13 @@ namespace BlackBook.Data.Model
         [Required]
         public int Pages { get; set; }
 
+        /// <summary> Год издания книги </summary>
+        [Required]
+        public int Year { get; set; }
+
+        /// <summary> Оглавление книги: HTML из редактора, обёрнутый в XML (см. TocXml) </summary>
+        public string Toc { get; set; }
+
         // Навигационное свойство для связи с файлом книги
         public BookFile BookFile { get; set; }
 

@@ -13,5 +13,7 @@ namespace BlackBook.Data.Interfaces
         Task AddRatingAsync(Rating rating);
 
         Task<bool> UpdateRatingAsync(Rating rating);
+
+        void Attach(Rating rating);
     }
 }

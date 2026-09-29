@@ -32,10 +32,10 @@ namespace BlackBook.Data
                 .WithOne(bf => bf.Book)
                 .OnDelete(DeleteBehavior.Cascade); // Каскадное удаление для BookFile
 
+            // Оглавление хранится в нативном XML-поле PostgreSQL
             modelBuilder.Entity<Book>()
-                .HasOne(b => b.BookFile)
-                .WithOne(bf => bf.Book)
-                .OnDelete(DeleteBehavior.Cascade); // Каскадное удаление для BookFile
+                .Property(b => b.Toc)
+                .HasColumnType("xml");
         }
     }
 }

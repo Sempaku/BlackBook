@@ -13,5 +13,7 @@ namespace BlackBook.Data.Interfaces
         Task AddUserBookProgressAsync(UserBookProgress userBookProgress);
 
         Task<bool> UpdateUserBookProgressAsync(UserBookProgress userBookProgress);
+
+        void Attach(UserBookProgress userBookProgress);
     }
 }

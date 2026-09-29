@@ -36,7 +36,10 @@ namespace BlackBook.Data.Repository
         {
             try
             {
-                _context.Entry(rating).State = EntityState.Modified;
+                var existing = await _context.Rating.FindAsync(rating.Id);
+                if (existing == null) return false;
+                
+                existing.BookRating = rating.BookRating;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -44,6 +47,11 @@ namespace BlackBook.Data.Repository
             {
                 return false;
             }
+        }
+
+        public void Attach(Rating rating)
+        {
+            _context.Rating.Attach(rating);
         }
     }
 }

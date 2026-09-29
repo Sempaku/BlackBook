@@ -19,7 +19,7 @@ namespace BlackBook.Api.Pages
             _megaService = megaService;
         }
 
-        public async Task OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
@@ -27,13 +27,13 @@ namespace BlackBook.Api.Pages
                 if (success)
                 {
                     ApplicationData.IsConnectedToMega = true;
-                    Response.Redirect("/Library"); // Переход на главную страницу
+                    return RedirectToPage("/Library");
                 }
-                else
-                {
-                    ErrorMessage = "Invalid login or password";
-                }
+
+                ErrorMessage = "Invalid login or password";
             }
+
+            return Page();
         }
     }
 }

@@ -1,0 +1,71 @@
+@page
+@model BlackBook.Api.Pages.BookAction.EditBookModel
+@{
+    Layout = "/Pages/_Layout.cshtml";
+    ViewData["Title"] = "Редактирование";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h2 class="bb-title"><i class="bi bi-pencil"></i> Редактирование книги</h2>
+    <a href="/BookAction/ViewBook?id=@Model.BookEditModel.Id" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i>&nbsp; К карточке
+    </a>
+</div>
+
+<div class="bb-card p-4">
+    <form method="post" id="bookForm">
+        <input type="hidden" id="id" name="BookEditModel.Id" value="@Model.BookEditModel.Id" />
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="title" class="form-label fw-semibold">Название <span class="text-danger">*</span></label>
+                <input type="text" id="title" name="BookEditModel.Title" class="form-control" value="@Model.BookEditModel.Title" required />
+            </div>
+            <div class="col-md-6">
+                <label for="author" class="form-label fw-semibold">Автор <span class="text-danger">*</span></label>
+                <input type="text" id="author" name="BookEditModel.Author" class="form-control" value="@Model.BookEditModel.Author" required />
+            </div>
+            <div class="col-md-4">
+                <label for="genre" class="form-label fw-semibold">Жанр</label>
+                <input type="text" id="genre" name="BookEditModel.Genre" class="form-control" value="@Model.BookEditModel.Genre" />
+            </div>
+            <div class="col-md-4">
+                <label for="year" class="form-label fw-semibold">Год издания</label>
+                <input type="number" id="year" name="BookEditModel.Year" class="form-control" value="@Model.BookEditModel.Year" min="0" max="9999" />
+            </div>
+            <div class="col-md-4">
+                <label for="pages" class="form-label fw-semibold">Страниц</label>
+                <input type="number" id="pages" name="BookEditModel.Pages" class="form-control" value="@Model.BookEditModel.Pages" min="1" />
+            </div>
+            <div class="col-12">
+                <label for="toc" class="form-label fw-semibold">
+                    <i class="bi bi-list-ul"></i> Оглавление
+                    <span class="fw-normal text-muted">— редактор; сохранится в БД как XML</span>
+                </label>
+                <textarea id="toc" name="BookEditModel.Toc">@Model.BookEditModel.Toc</textarea>
+            </div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>&nbsp; Сохранить</button>
+            <a href="/BookAction/ViewBook?id=@Model.BookEditModel.Id" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // WYSIWYG-редактор оглавления; содержимое сохраняется в БД как XML
+            $('#toc').summernote({
+                height: 250,
+                placeholder: 'Оглавление книги: главы, разделы...'
+            });
+
+            // Перед отправкой формы кладём HTML из редактора в textarea
+            $('#bookForm').on('submit', function () {
+                $('#toc').val($('#toc').summernote('code'));
+            });
+        });
+    </script>
+}

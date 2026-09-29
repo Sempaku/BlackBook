@@ -1,0 +1,181 @@
+﻿@page
+@using BlackBook.Api.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryModel
+@{
+    Layout = "/Pages/_Layout.cshtml";
+    ViewData["Title"] = "Библиотека";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h2 class="bb-title"><i class="bi bi-collection"></i> Библиотека</h2>
+        <div class="bb-subtitle">
+            @if (string.IsNullOrWhiteSpace(Model.Query))
+            {
+                <text>Всего книг: @Model.Books.Count()</text>
+            }
+            else
+            {
+                <text>Поиск «@Model.Query»: найдено @Model.Books.Count()</text>
+            }
+        </div>
+    </div>
+    <a href="/BookAction/CreateBook" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i>&nbsp; Добавить книгу
+    </a>
+</div>
+
+<div class="bb-card p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-10">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="@Model.Query" class="form-control border-start-0"
+                       placeholder="Поиск по названию, автору, оглавлению..." />
+            </div>
+        </div>
+        <div class="col-md-2 d-grid gap-2 d-md-flex">
+            <button type="submit" class="btn btn-primary flex-fill">Найти</button>
+            @if (!string.IsNullOrWhiteSpace(Model.Query))
+            {
+                <a href="/Library" class="btn btn-outline-secondary" title="Сбросить поиск"><i class="bi bi-x-lg"></i></a>
+            }
+        </div>
+    </form>
+</div>
+
+<div class="bb-card p-3">
+    @if (Model.Books.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table class="table bb-table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Автор</th>
+                        <th>Жанр</th>
+                        <th>Год</th>
+                        <th class="w-25">Прогресс чтения</th>
+                        <th>Оценка</th>
+                        <th class="text-end">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Books)
+                    {
+                        var read = item.UserBookProgress?.LastReadPage ?? 0;
+                        var pages = item.Pages > 0 ? item.Pages : 1;
+                        var percent = Math.Min(100, read * 100 / pages);
+                        var rating = item.Rating?.BookRating ?? 0;
+                        var ratingClass = rating >= 7 ? "bg-success" : rating >= 4 ? "bg-warning text-dark" : "bg-secondary";
+
+                        <tr>
+                            <td>
+                                <a class="bb-book-title" asp-page="/BookAction/ViewBook" asp-route-id="@item.Id">
+                                    @Html.DisplayFor(m => item.Title)
+                                </a>
+                            </td>
+                            <td>@Html.DisplayFor(m => item.Author)</td>
+                            <td><span class="badge rounded-pill" style="background:#c7d2fe; color:#312e81;">@item.Genre</span></td>
+                            <td>@Html.DisplayFor(m => item.Year)</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" style="width: @percent%; background: linear-gradient(90deg,#6366f1,#4338ca);"></div>
+                                    </div>
+                                    <small class="text-muted text-nowrap">@read / @item.Pages</small>
+                                </div>
+                                <input type="number" name="lastReadPage[@item.Id]" value="@read"
+                                       class="form-control form-control-sm mt-1 last-read-page-input" data-id="@item.Id"
+                                       min="0" max="@item.Pages" title="Прочитано страниц" />
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill @ratingClass fs-6">@rating / 10</span>
+                                <input type="number" name="rating[@item.Id]" value="@rating"
+                                       class="form-control form-control-sm mt-1 rating-input" data-id="@item.Id"
+                                       min="0" max="10" title="Оценка" />
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a asp-page="/BookAction/ViewBook" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Карточка">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-page="/BookAction/EditBook" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Редактировать">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Удалить"
+                                            onclick="return confirm('Удалить книгу «@item.Title»?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-journal-x" style="font-size: 3rem; color: #c7d2fe;"></i>
+            <p class="bb-subtitle mt-3 mb-0">
+                @if (string.IsNullOrWhiteSpace(Model.Query))
+                {
+                    <text>Библиотека пуста — добавьте первую книгу.</text>
+                }
+                else
+                {
+                    <text>По запросу «@Model.Query» ничего не найдено.</text>
+                }
+            </p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.rating-input').on('change', function () {
+                var id = $(this).data('id');
+                var rating = $(this).val();
+                $.ajax({
+                    url: '/Library?handler=UpdateRating',
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: 'id=' + id + '&rating=' + rating,
+                    success: function (response) {
+                        console.log('Рейтинг обновлен:', response);
+                        // Перезагружаем страницу для отображения новых данных
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        console.error('Ошибка обновления рейтинга:', xhr.status, xhr.responseText);
+                        alert('Не удалось сохранить оценку.');
+                    }
+                });
+            });
+
+            $('.last-read-page-input').on('change', function () {
+                var id = $(this).data('id');
+                var lastReadPage = $(this).val();
+                $.ajax({
+                    url: '/Library?handler=UpdateProgress',
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: 'id=' + id + '&lastReadPage=' + lastReadPage,
+                    success: function (response) {
+                        console.log('Прогресс обновлен:', response);
+                        // Перезагружаем страницу для отображения новых данных
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        console.error('Ошибка обновления прогресса:', xhr.status, xhr.responseText);
+                        alert('Не удалось сохранить прогресс чтения.');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,118 @@
+﻿@page
+@using BlackBook.Data.Utils
+@model BlackBook.Api.Pages.BookAction.ViewBookModel
+@{
+    Layout = "/Pages/_Layout.cshtml";
+    ViewData["Title"] = Model.Book?.Title ?? "Книга";
+}
+
+@if (Model.Book != null)
+{
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+            <h2 class="bb-title"><i class="bi bi-book"></i> @Model.Book.Title</h2>
+            <div class="bb-subtitle">@Model.Book.Author</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-page="/BookAction/EditBook" asp-route-id="@Model.Book.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i>&nbsp; Редактировать
+            </a>
+            <a href="/Library" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i>&nbsp; К списку
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="bb-card p-4">
+                <h5 class="bb-title mb-3"><i class="bi bi-info-circle"></i> О книге</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Автор</span><span class="fw-semibold">@Model.Book.Author</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Жанр</span>
+                        <span class="badge rounded-pill" style="background:#c7d2fe; color:#312e81;">@Model.Book.Genre</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Год издания</span><span class="fw-semibold">@Model.Book.Year</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Страниц</span><span class="fw-semibold">@Model.Book.Pages</span>
+                    </li>
+                    @if (Model.Book.Rating != null)
+                    {
+                        var rating = Model.Book.Rating.BookRating;
+                        var ratingClass = rating >= 7 ? "bg-success" : rating >= 4 ? "bg-warning text-dark" : "bg-secondary";
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Оценка</span>
+                            <span class="badge rounded-pill @ratingClass">@rating / 10</span>
+                        </li>
+                    }
+                    @if (Model.Book.UserBookProgress != null)
+                    {
+                        var read = Model.Book.UserBookProgress.LastReadPage;
+                        var percent = Model.Book.Pages > 0 ? Math.Min(100, read * 100 / Model.Book.Pages) : 0;
+                        <li class="list-group-item px-0">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Прогресс чтения</span>
+                                <span class="fw-semibold">@read / @Model.Book.Pages</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" style="width: @percent%; background: linear-gradient(90deg,#6366f1,#4338ca);"></div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="bb-card p-4 mb-4">
+                <h5 class="bb-title mb-3"><i class="bi bi-list-ul"></i> Оглавление</h5>
+                @{
+                    var tocHtml = TocXml.UnwrapToHtml(Model.Book.Toc);
+                }
+                @if (!string.IsNullOrWhiteSpace(tocHtml))
+                {
+                    <div class="bb-toc">@Html.Raw(tocHtml)</div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Оглавление не задано — добавьте его через редактирование книги.</p>
+                }
+            </div>
+
+            @if (Model.BookFile != null && Model.PdfContent != null && Model.PdfContent.Length > 0)
+            {
+                <div class="bb-card p-4">
+                    <h5 class="bb-title mb-3"><i class="bi bi-file-earmark-pdf"></i> Читать</h5>
+                    <div class="bb-pdf" style="height: 600px;">
+                        <iframe src="data:application/pdf;base64,@Convert.ToBase64String(Model.PdfContent)#page=@(Model.Book.UserBookProgress?.LastReadPage ?? 1)"
+                                style="width:100%; height:100%; border: none;" allowfullscreen></iframe>
+                    </div>
+                </div>
+            }
+            else if (Model.BookFile != null)
+            {
+                <div class="bb-card p-4">
+                    <h5 class="bb-title mb-3"><i class="bi bi-file-earmark-pdf"></i> Файл книги</h5>
+                    <p class="text-muted mb-2">Файл: @Model.BookFile.FileName</p>
+                    <p class="text-warning">
+                        <i class="bi bi-exclamation-triangle"></i> PDF-файл недоступен для просмотра.
+                        Убедитесь, что файл загружен в локальное хранилище.
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="bb-card p-5 text-center">
+        <i class="bi bi-journal-x" style="font-size: 3rem; color: #c7d2fe;"></i>
+        <p class="bb-subtitle mt-3">Книга не найдена.</p>
+        <a href="/Library" class="btn btn-outline-primary"><i class="bi bi-arrow-left"></i>&nbsp; К списку</a>
+    </div>
+}

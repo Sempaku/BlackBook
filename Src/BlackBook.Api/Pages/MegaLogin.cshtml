@@ -1,0 +1,43 @@
+﻿@page
+@model BlackBook.Api.Pages.MegaLoginModel
+@{
+    Layout = "/Pages/_Layout.cshtml";
+    ViewData["Title"] = "Подключение к MEGA";
+}
+
+<div class="bb-card p-4" style="max-width: 500px; margin: 50px auto;">
+    <h3 class="bb-title mb-4"><i class="bi bi-cloud"></i> Подключение к MEGA</h3>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @Model.ErrorMessage
+        </div>
+    }
+
+    @if (BlackBook.Api.ApplicationData.IsConnectedToMega)
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="bi bi-check-circle"></i> Подключение к MEGA активно.
+        </div>
+    }
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="email" name="LoginData.Email" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label fw-semibold">Пароль</label>
+            <input type="password" class="form-control" id="password" name="LoginData.Password" required />
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-plug"></i> Подключиться
+            </button>
+            <a href="/Library" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к библиотеке
+            </a>
+        </div>
+    </form>
+</div>

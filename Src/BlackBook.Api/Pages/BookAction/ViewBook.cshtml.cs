@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BlackBook.Api.Pages.BookAction
 {
+    /// <summary>
+    /// РљР°СЂС‚РѕС‡РєР° РєРЅРёРіРё: РґР°РЅРЅС‹Рµ, РѕРіР»Р°РІР»РµРЅРёРµ (XML -> HTML) Рё С‡С‚РµРЅРёРµ PDF.
+    /// </summary>
     public class ViewBookModel : PageModel
     {
         private readonly IMegaService _megaService;
@@ -25,37 +28,31 @@ namespace BlackBook.Api.Pages.BookAction
             _bookStorageService = bookStorageService;
         }
 
-        public string GetPdfFilePath()
-        {
-            return Path.Combine("~\\wwwroot\\books", BookFile.FileName);
-        }
-
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            // Получаем ID книги из параметра маршрута
-            var book = (await _bookStorageService.GetAllBooksAsync()).Find(b => b.Id == id);
-            Book = book ?? throw new ArgumentNullException(nameof(book));
+            var book = await _bookStorageService.GetBookAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            Book = book;
 
             var bookFile = book.BookFile;
             if (bookFile == null)
             {
-                return NotFound();
+                // Р±РµР· С„Р°Р№Р»Р° РїРѕРєР°Р·С‹РІР°РµРј РєР°СЂС‚РѕС‡РєСѓ СЃ РґР°РЅРЅС‹РјРё Рё РѕРіР»Р°РІР»РµРЅРёРµРј
+                return Page();
             }
             BookFile = bookFile;
 
             if (BookContainInLocalDirectory(bookFile.FileName))
             {
-                // Книга уже скачана, преобразуем путь в Stream
                 var filePath = Path.Combine(ApplicationData.LocalFileStorage, bookFile.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                {
-                    PdfContent = new byte[fileStream.Length];
-                    await fileStream.ReadAsync(PdfContent, 0, (int)fileStream.Length);
-                }
+                PdfContent = await System.IO.File.ReadAllBytesAsync(filePath);
             }
             else
             {
-                // Загружаем книгу с помощью вашего сервиса загрузки
+                // С„Р°Р№Р»Р° РЅРµС‚ РІ Р»РѕРєР°Р»СЊРЅРѕРј РєСЌС€Рµ вЂ” С‚СЏРЅРµРј РёР· РѕР±Р»Р°РєР°
                 var bookStream = await _megaService.GetBookByDownloadUrl(bookFile.FilePath);
 
                 if (bookStream == null)
@@ -63,12 +60,10 @@ namespace BlackBook.Api.Pages.BookAction
                     return NotFound();
                 }
 
-                var filePath = Path.Combine(ApplicationData.LocalFileStorage, bookFile.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                using (var memoryStream = new MemoryStream())
                 {
-                    bookStream.CopyTo(fileStream);
-                    PdfContent = new byte[bookStream.Length];
-                    await bookStream.ReadAsync(PdfContent, 0, (int)bookStream.Length);
+                    await bookStream.CopyToAsync(memoryStream);
+                    PdfContent = memoryStream.ToArray();
                 }
             }
 

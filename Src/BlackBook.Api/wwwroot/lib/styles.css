@@ -1,0 +1,103 @@
+﻿:root {
+    --bb-accent: #4338ca;
+    --bb-accent-dark: #1e1b4b;
+    --bb-accent-soft: #eef2ff;
+}
+
+body {
+    background: #f6f7fb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+main { flex: 1; }
+
+/* ---------- Навбар ---------- */
+.bb-navbar {
+    background: linear-gradient(90deg, #1e1b4b, #312e81 55%, #4338ca);
+    box-shadow: 0 2px 14px rgba(30, 27, 75, .35);
+}
+.bb-navbar .navbar-brand,
+.bb-navbar .nav-link {
+    color: #e0e7ff;
+    font-weight: 500;
+}
+.bb-navbar .nav-link:hover,
+.bb-navbar .navbar-brand:hover {
+    color: #ffffff;
+}
+
+/* ---------- Карточки ---------- */
+.bb-card {
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(30, 27, 75, .08);
+    background: #fff;
+}
+
+.bb-title {
+    font-weight: 700;
+    color: var(--bb-accent-dark);
+    margin-bottom: 0;
+}
+
+.bb-subtitle {
+    color: #64748b;
+}
+
+/* ---------- Таблица ---------- */
+.bb-table thead th {
+    background: var(--bb-accent-soft);
+    color: #312e81;
+    text-transform: uppercase;
+    font-size: .76rem;
+    letter-spacing: .05em;
+    border-bottom: 2px solid #c7d2fe;
+}
+.bb-table tbody tr:hover { background: #f5f3ff; }
+.bb-table td { vertical-align: middle; }
+
+/* ---------- Оглавление ---------- */
+.bb-toc {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+}
+.bb-toc h1 { font-size: 1.3rem; margin: .9rem 0 .4rem; color: var(--bb-accent-dark); }
+.bb-toc h2 { font-size: 1.15rem; margin: .7rem 0 .35rem; color: #312e81; }
+.bb-toc h3 { font-size: 1rem; margin: .6rem 0 .3rem; color: #334155; }
+.bb-toc p { color: #475569; margin-bottom: .35rem; }
+.bb-toc ul, .bb-toc ol { color: #475569; }
+
+/* ---------- PDF ---------- */
+.bb-pdf {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(30, 27, 75, .12);
+    background: #fff;
+}
+
+/* ---------- Футер ---------- */
+footer {
+    background: var(--bb-accent-soft);
+    color: #4338ca;
+    padding: .8rem 0;
+    margin-top: 2rem;
+}
+
+/* ---------- Summernote ---------- */
+.note-editor.note-frame {
+    border-radius: 10px;
+    border-color: #c7d2fe;
+    box-shadow: none;
+}
+.note-toolbar {
+    background: var(--bb-accent-soft) !important;
+    border-bottom: 1px solid #c7d2fe;
+}
+
+/* ---------- Мелочи ---------- */
+.bb-book-title { font-weight: 600; color: var(--bb-accent-dark); }
+a.bb-book-title:hover { color: var(--bb-accent); }

@@ -1,0 +1,43 @@
+# Docker Compose: PostgreSQL + BlackBook.Api
+# Запуск:  docker compose up -d --build
+# Веб:     http://localhost:8080/Library
+# Swagger: http://localhost:8080/swagger
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bb_test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2003
+    ports:
+      # Снаружи 5433, чтобы не конфликтовать с локальным PostgreSQL на 5432
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Скрипты выполняются один раз при первом старте контейнера (создание БД):
+      # сначала таблицы, затем хранимые процедуры
+      - ./Sql/docker-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bb_test_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build:
+      context: .
+      dockerfile: Src/BlackBook.Api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development 
+      ASPNETCORE_URLS: http://+:80
+      # Переопределяет строку подключения из appsettings.json:
+      # Host=db - имя сервиса PostgreSQL внутри сети compose
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=bb_test_db;Username=postgres;Password=2003"
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:

@@ -10,7 +10,15 @@
 - прогресс чтения и оценка каждой книги
 - REST API со Swagger
 
+## UI
+Главная страница:
 <img width="1625" height="743" alt="image" src="https://github.com/user-attachments/assets/e48a7380-9c5d-44cc-ab29-908d332ba523" />
+
+Страница просмотра:
+<img width="1564" height="765" alt="image" src="https://github.com/user-attachments/assets/9515ab15-326c-4148-ba1e-a94ebe827a85" />
+
+Страница редактирования книги:
+<img width="1558" height="954" alt="image" src="https://github.com/user-attachments/assets/7b000f27-fea7-45e2-91ad-6a7eec8c3ca6" />
 
 
 ## Стек

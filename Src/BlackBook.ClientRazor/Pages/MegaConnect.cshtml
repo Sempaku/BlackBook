@@ -1,0 +1,35 @@
+﻿@page
+@model BlackBook.ClientRazor.Pages.MegaConnectModel
+@{
+    ViewData["Title"] = "Подключение к MEGA";
+}
+
+<div class="bb-card p-4" style="max-width: 500px; margin: 50px auto;">
+    <h3 class="bb-title mb-4"><i class="bi bi-cloud"></i> Подключение к MEGA</h3>
+
+    @if (!string.IsNullOrEmpty(Model.ConnectionResult))
+    {
+        <div class="alert alert-info" role="alert">
+            @Model.ConnectionResult
+        </div>
+    }
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="megaEmail" class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="megaEmail" name="megaEmail" required />
+        </div>
+        <div class="mb-3">
+            <label for="megaPassword" class="form-label fw-semibold">Пароль</label>
+            <input type="password" class="form-control" id="megaPassword" name="megaPassword" required />
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" name="megaSubmitButton" class="btn btn-primary">
+                <i class="bi bi-plug"></i> Подключиться
+            </button>
+            <a href="/BookLibrary" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к библиотеке
+            </a>
+        </div>
+    </form>
+</div>

@@ -48,22 +48,34 @@ namespace BB_WinForms.Forms
         {
             if (!ValidatePages(textBox_pages.Text))
             {
-                MessageBox.Show("Bad input: Pages."); Close();
+                MessageBox.Show("Bad input: Pages.");
+                Result = false;
+                Close();
+                return;
             }
 
             if (!ValidateString(textBox_title.Text) && !ValidateString(textBox_author.Text))
             {
-                MessageBox.Show("Bad input: Title OR Author"); Close();
+                MessageBox.Show("Bad input: Title OR Author");
+                Result = false;
+                Close();
+                return;
             }
 
             if (!ValidateString(textBox_genre.Text))
             {
-                MessageBox.Show("Bad input: Genre"); Close();
+                MessageBox.Show("Bad input: Genre");
+                Result = false;
+                Close();
+                return;
             }
 
             if (!File.Exists(_filenamePath))
             {
-                MessageBox.Show("Bad input: Directory not contains file."); Close();
+                MessageBox.Show("Bad input: Directory not contains file.");
+                Result = false;
+                Close();
+                return;
             }
 
             var result = await BlackBookHttpClient.AddBook(
@@ -75,8 +87,7 @@ namespace BB_WinForms.Forms
                     Pages = _countPages,
                 }, _filenamePath);
 
-            if (result) Result = true;
-
+            Result = result;
             Close();
         }
 

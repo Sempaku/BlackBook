@@ -43,24 +43,26 @@ namespace BB_WinForms
 
         private async void listBox_BooksOnMain_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // Получите выбранное имя книги из listBox
             string selectedBookName = listBox_BooksOnMain.SelectedItem as string;
-            var book = _books.Where(b => b.Title == selectedBookName).FirstOrDefault();
-            _currentBook = book;
-            var lastReadPage = _currentBook.UserBookProgress.LastReadPage;
+            if (string.IsNullOrEmpty(selectedBookName))
+                return;
 
-            if (BookContainInLocalDirectory(book.BookFile.FileName))
+            var book = _books.FirstOrDefault(b => b.Title == selectedBookName);
+            if (book == null)
+                return;
+
+            _currentBook = book;
+            var lastReadPage = book.UserBookProgress?.LastReadPage ?? 0;
+
+            if (BookContainInLocalDirectory(book.BookFile?.FileName))
             {
-                OpenBookInPdfReader($"{ApplicationData.LocalFileStorage}/{book.BookFile.FileName}", lastReadPage);
+                OpenBookInPdfReader($"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}", lastReadPage);
             }
             else
             {
-                if (book != null)
+                if (await BlackBookHttpClient.DownloadBook(book))
                 {
-                    if (await BlackBookHttpClient.DownloadBook(book))
-                    {
-                        OpenBookInPdfReader($@"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}", lastReadPage);
-                    }
+                    OpenBookInPdfReader($@"{ApplicationData.LocalFileStorage}\\{book.BookFile.FileName}", lastReadPage);
                 }
             }
         }
@@ -112,10 +114,9 @@ namespace BB_WinForms
             dt.Columns.Add("Author", typeof(string));
             dt.Columns.Add("Genre", typeof(string));
             dt.Columns.Add("Rating", typeof(int));
-            dt.Columns.Add("Pages", typeof(string));
-            dt.Columns.Add("PagesRead", typeof(string));
+            dt.Columns.Add("Pages", typeof(int));
+            dt.Columns.Add("PagesRead", typeof(int));
 
-            // Добавьте данные из списка books в DataTable
             foreach (var book in books)
             {
                 DataRow row = dt.NewRow();
@@ -123,9 +124,9 @@ namespace BB_WinForms
                 row["Title"] = book.Title;
                 row["Author"] = book.Author;
                 row["Genre"] = book.Genre;
-                row["Rating"] = book.Rating.BookRating.ToString();
-                row["PagesRead"] = book.UserBookProgress.LastReadPage.ToString();
+                row["Rating"] = book.Rating?.BookRating ?? 0;
                 row["Pages"] = book.Pages;
+                row["PagesRead"] = book.UserBookProgress?.LastReadPage ?? 0;
                 dt.Rows.Add(row);
             }
 
@@ -208,7 +209,7 @@ namespace BB_WinForms
 
         private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 6 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
             {
                 var changedValue = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 var bookId = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -246,19 +247,19 @@ namespace BB_WinForms
             dt.Columns.Add("Author", typeof(string));
             dt.Columns.Add("Genre", typeof(string));
             dt.Columns.Add("Rating", typeof(int));
-            dt.Columns.Add("Pages", typeof(string));
-            dt.Columns.Add("PagesRead", typeof(string));
+            dt.Columns.Add("Pages", typeof(int));
+            dt.Columns.Add("PagesRead", typeof(int));
 
-            foreach (var book in filterResult)
+            foreach (var book in filterResult.Count > 0 ? filterResult : _books)
             {
                 DataRow row = dt.NewRow();
                 row["Id"] = book.Id;
                 row["Title"] = book.Title;
                 row["Author"] = book.Author;
                 row["Genre"] = book.Genre;
-                row["Rating"] = book.Rating.BookRating.ToString();
+                row["Rating"] = book.Rating?.BookRating ?? 0;
                 row["Pages"] = book.Pages;
-                row["PagesRead"] = book.UserBookProgress.LastReadPage;
+                row["PagesRead"] = book.UserBookProgress?.LastReadPage ?? 0;
 
                 dt.Rows.Add(row);
             }
@@ -285,7 +286,8 @@ namespace BB_WinForms
                     break;
 
                 case BookColumn.Rating:
-                    query = query.Where(book => book.Rating.BookRating.ToString() == filterValue);
+                    // В expression tree запрещён оператор ?? (CS8072), поэтому тернарный оператор
+                    query = query.Where(book => (book.Rating != null ? book.Rating.BookRating : 0).ToString() == filterValue);
                     break;
 
                 case BookColumn.Pages:
@@ -293,7 +295,8 @@ namespace BB_WinForms
                     break;
 
                 case BookColumn.PagesRead:
-                    query = query.Where(book => book.UserBookProgress.LastReadPage.ToString() == filterValue);
+                    // В expression tree запрещён оператор ?? (CS8072), поэтому тернарный оператор
+                    query = query.Where(book => (book.UserBookProgress != null ? book.UserBookProgress.LastReadPage : 0).ToString() == filterValue);
                     break;
             }
 
@@ -317,15 +320,16 @@ namespace BB_WinForms
             dataGridView1.ContextMenu = contextMenu;
         }
 
-        // Обработчик события нажатия на DataGridView
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
                 DataGridView.HitTestInfo hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
-                if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
+                if (hitTestInfo.Type == DataGridViewHitTestType.Cell && hitTestInfo.RowIndex >= 0)
                 {
                     dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex];
+                    dataGridView1.ClearSelection();
+                    dataGridView1.Rows[hitTestInfo.RowIndex].Selected = true;
                     dataGridView1.ContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
                 }
             }
@@ -335,19 +339,11 @@ namespace BB_WinForms
         {
             if (dataGridView1.SelectedRows.Count > 0)
             {
-                var bookName = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
-                var bookAuthor = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
-                var bookGenre = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
-                var bookPages = dataGridView1.SelectedRows[0].Cells[4].Value.ToString();
+                var row = dataGridView1.SelectedRows[0];
+                var bookId = int.Parse(row.Cells[0].Value.ToString());
+                var book = _books.FirstOrDefault(b => b.Id == bookId);
 
-                var book = _books
-                    .Where(b => b.Title == bookName &&
-                           b.Author == bookAuthor &&
-                           b.Genre == bookGenre &&
-                           b.Pages.ToString() == bookPages)
-                    .FirstOrDefault();
-
-                if (await BlackBookHttpClient.RemoveBook(book))
+                if (book != null && await BlackBookHttpClient.RemoveBook(book))
                 {
                     DeleteLocalFile(book.BookFile.FileName);
                     _books.Remove(book);
@@ -367,13 +363,11 @@ namespace BB_WinForms
 
         private async Task UpdateLastReadPage()
         {
-            if (_currentBook == null) return;
+            if (_currentBook == null || _pdfViewer?.CurrentPage == null) return;
 
             var currentPage = _pdfViewer.CurrentPage.PageIndex;
             _currentBook.UserBookProgress.LastReadPage = currentPage;
             await BlackBookHttpClient.SetLastReadPageByBook(_currentBook.Id, currentPage);
-
-            MessageBox.Show(currentPage.ToString());
         }
 
         public void AddPdfViewer()

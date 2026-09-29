@@ -4,6 +4,7 @@ using BlackBook.Data.Repository;
 using BookStorageService;
 using Mega.Client;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlackBook.ClientRazor
 {

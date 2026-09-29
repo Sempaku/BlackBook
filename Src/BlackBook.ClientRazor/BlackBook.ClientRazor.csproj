@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlackBook.Data\BlackBook.Data.csproj" />
+    <ProjectReference Include="..\BookStorageService\BookStorageService.csproj" />
     <ProjectReference Include="..\Mega.Client\Mega.Client.csproj" />
   </ItemGroup>
 

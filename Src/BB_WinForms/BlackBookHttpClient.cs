@@ -13,7 +13,8 @@ namespace BB_WinForms
 {
     public class BlackBookHttpClient
     {
-        private static HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClientHandler _httpClientHandler = new HttpClientHandler();
 
         public static async Task<bool> LoginToMegaAsync(LoginModel loginModel)
         {

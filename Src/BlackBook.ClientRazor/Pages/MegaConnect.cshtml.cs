@@ -18,14 +18,18 @@ namespace BlackBook.ClientRazor.Pages
 
         }
 
-        public async Task OnPostAsync(string megaEmail, string megaPassword)
+        public async Task<IActionResult> OnPostAsync(string megaEmail, string megaPassword)
         {
+            if (string.IsNullOrEmpty(megaEmail) || string.IsNullOrEmpty(megaPassword))
+            {
+                ConnectionResult = "Ошибка: введите email и пароль";
+                return Page();
+            }
+
             bool conResult = await _megaClient.CreateClientAsync(megaEmail, megaPassword);
 
-            if (conResult)
-                ConnectionResult = "Success!";
-            else
-                ConnectionResult = "Bad auth :(";
+            ConnectionResult = conResult ? "Успешное подключение к MEGA!" : "Ошибка подключения к MEGA. Проверьте email и пароль.";
+            return Page();
         }
     }
 }

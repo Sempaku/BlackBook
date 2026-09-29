@@ -26,7 +26,10 @@ namespace Mega.Client
             }
             catch (Exception ex)
             {
+                // Логин не удался: не полагаемся на IsLoggedIn — он мог остаться true
+                // от предыдущей успешной сессии
                 Debug.WriteLine(ex.Message);
+                return false;
             }
 
             return _client.IsLoggedIn;
@@ -37,8 +40,14 @@ namespace Mega.Client
             if (string.IsNullOrWhiteSpace(filename))
                 return null;
 
+            if (_client == null || !_client.IsLoggedIn)
+                throw new InvalidOperationException("MEGA client is not connected. Log in first.");
+
             if (_sysDirectory == null)
             {
+                _sysDirectory = await GetBookDirectoryAsync();
+                if (_sysDirectory == null)
+                    _sysDirectory = await InitBookDirectoryAsync();
             }
 
             INode uploadedFile = await _client.UploadFileAsync(filename, _sysDirectory);
@@ -47,6 +56,9 @@ namespace Mega.Client
 
         public async Task<INode> UploadStreamAsync(Stream stream, string name)
         {
+            if (_client == null || !_client.IsLoggedIn)
+                throw new InvalidOperationException("MEGA client is not connected. Log in first.");
+
             INode uploadedFile = await _client.UploadAsync(stream, name, _sysDirectory);
             return uploadedFile;
         }

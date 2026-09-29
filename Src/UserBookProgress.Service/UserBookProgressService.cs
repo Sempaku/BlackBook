@@ -36,7 +36,11 @@ namespace UserBookProgressService
         public async Task<bool> ModifyLastReadPageByBookIdAsync(int bookId, int lastReadPage)
         {
             var book = await _bookRepository.GetBookByIdAsync(bookId);
+            if (book?.UserBookProgress == null)
+                return false;
+
             book.UserBookProgress.LastReadPage = lastReadPage;
+            _userBookProgressRepository.Attach(book.UserBookProgress);
             return await _userBookProgressRepository.UpdateUserBookProgressAsync(book.UserBookProgress);
         }
     }

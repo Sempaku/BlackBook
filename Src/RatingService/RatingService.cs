@@ -36,7 +36,11 @@ namespace RatingService
         public async Task<bool> ModifyRatingByBookIdAsync(int bookId, int rating)
         {
             var book = await _bookRepository.GetBookByIdAsync(bookId);
+            if (book?.Rating == null)
+                return false;
+
             book.Rating.BookRating = rating;
+            _ratingRepository.Attach(book.Rating);
             return await _ratingRepository.UpdateRatingAsync(book.Rating);
         }
     }

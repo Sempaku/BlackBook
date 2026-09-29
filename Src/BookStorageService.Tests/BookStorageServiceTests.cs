@@ -17,11 +17,17 @@ namespace BookStorageService.Tests
             var bookRepositoryMock = new Mock<IBookRepository>();
             var bookFileRepositoryMock = new Mock<IBookFileRepository>();
             var userBookProgressRepositoryMock = new Mock<IUserBookProgressRepository>();
+            var ratingRepositoryMock = new Mock<IRatingRepository>();
+
+            bookRepositoryMock
+                .Setup(repo => repo.AddBookAsync(It.IsAny<Book>()))
+                .ReturnsAsync(1);
 
             var bookStorageService = new BookStorageService(
                 bookRepositoryMock.Object,
                 bookFileRepositoryMock.Object,
-                userBookProgressRepositoryMock.Object
+                userBookProgressRepositoryMock.Object,
+                ratingRepositoryMock.Object
             );
 
             var book = new Book
@@ -58,11 +64,13 @@ namespace BookStorageService.Tests
             var bookRepositoryMock = new BookRepository(DbContextCreator.CreateDbContext());
             var bookFileRepositoryMock = new BookFileRepository(DbContextCreator.CreateDbContext());
             var userBookProgressRepositoryMock = new UserBookProgressRepository(DbContextCreator.CreateDbContext());
+            var ratingRepositoryMock = new RatingRepository(DbContextCreator.CreateDbContext());
 
             var bookStorageService = new BookStorageService(
                 bookRepositoryMock,
                 bookFileRepositoryMock,
-                userBookProgressRepositoryMock
+                userBookProgressRepositoryMock,
+                ratingRepositoryMock
             );
 
             using (var stream = new FileStream(filePath, FileMode.Open))
